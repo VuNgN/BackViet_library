@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/book_graph"
+    app:startDestination="@id/bookOverviewFragment">
+    <fragment
+        android:id="@+id/bookOverviewFragment"
+        android:name="com.vungn.backvietlibrary.ui.bookoverview.BookOverviewFragment"
+        android:label="fragment_book_overview"
+        tools:layout="@layout/fragment_book_overview">
+        <action
+            android:id="@+id/action_bookOverviewFragment_to_bookDetailFragment"
+            app:destination="@id/bookDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookDetailFragment"
+        android:name="com.vungn.backvietlibrary.ui.bookdetail.BookDetailFragment"
+        android:label="fragment_book_detail"
+        tools:layout="@layout/fragment_book_detail" />
+</navigation>

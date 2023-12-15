@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">BackVietLibrary</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="new_and_hot"><![CDATA[New & Hot]]></string>
+    <string name="offer">Offer</string>
+    <string name="library">Library</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="search">search</string>
+    <string name="content_description_search">Search button</string>
+    <string name="account">account</string>
+    <string name="content_description_account">Account button</string>
+    <string name="page_info">Page %1$s of %2$s</string>
+    <string name="page_percent">%1$s%%</string>
+    <string name="page_number">%1$s / %2$s</string>
+</resources>

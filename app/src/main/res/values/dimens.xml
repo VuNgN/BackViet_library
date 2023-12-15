@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_bottom_main_layout">100dp</dimen>
+    <dimen name="height_main_view_pager">440dp</dimen>
+    <dimen name="padding_horizontal_main_view_pager">100dp</dimen>
+    <dimen name="padding_vertical_main_view_pager">40dp</dimen>
+    <dimen name="padding_between_elements_book_category">20dp</dimen>
+    <dimen name="corner_10">10dp</dimen>
+</resources>

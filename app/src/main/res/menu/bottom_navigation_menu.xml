@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:enabled="true"
+        android:icon="@drawable/round_home_24"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/newAndHotFragment"
+        android:enabled="true"
+        android:icon="@drawable/round_new_releases_24"
+        android:title="@string/new_and_hot" />
+    <item
+        android:id="@+id/offerFragment"
+        android:enabled="true"
+        android:icon="@drawable/round_whatshot_24"
+        android:title="@string/offer" />
+    <item
+        android:id="@+id/libraryFragment"
+        android:enabled="true"
+        android:icon="@drawable/baseline_library_books_24"
+        android:title="@string/library" />
+    <item
+        android:id="@+id/upgradeFragment"
+        android:enabled="true"
+        android:icon="@drawable/round_diamond_24"
+        android:title="@string/upgrade" />
+</menu>
