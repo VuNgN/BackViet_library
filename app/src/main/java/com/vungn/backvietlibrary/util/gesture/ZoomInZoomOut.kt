@@ -46,8 +46,8 @@ class ZoomInZoomOut(context: Context, private val scaleX: Float) : OnTouchListen
         GestureDetector(context, object : SimpleOnGestureListener() {
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 matrix.postScale(
-                    scaleX / matrix.values()[Matrix.MSCALE_X] * 1.5f,
-                    scaleX / matrix.values()[Matrix.MSCALE_Y] * 1.5f,
+                    scaleX / matrix.values()[Matrix.MSCALE_X],
+                    scaleX / matrix.values()[Matrix.MSCALE_Y],
                     mid.x,
                     mid.y
                 )

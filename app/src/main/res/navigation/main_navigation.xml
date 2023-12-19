@@ -4,6 +4,5 @@
     android:id="@+id/app_navigation"
     app:startDestination="@+id/main_graph">
 
-    <include app:graph="@navigation/login_graph" />
     <include app:graph="@navigation/main_graph" />
 </navigation>

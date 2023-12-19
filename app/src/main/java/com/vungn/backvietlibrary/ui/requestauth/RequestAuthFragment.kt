@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentRequestAuthBinding
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
-import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 
 class RequestAuthFragment : Fragment() {
     private lateinit var binding: FragmentRequestAuthBinding
@@ -32,6 +33,9 @@ class RequestAuthFragment : Fragment() {
                     requireActivity().finish()
                     (requireActivity() as AuthActivity).onBackPressedMethod()
                 }
+            }
+            loginButton.setOnClickListener {
+                findNavController().navigate(R.id.action_requestAuthFragment_to_loginFragment)
             }
         }
     }

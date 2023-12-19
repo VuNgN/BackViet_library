@@ -265,8 +265,8 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
         }
         adapter = ViewPagerAdapter(this.requireContext())
 
-        setupPager()
         setupPagerFullScreen()
+        setupPager()
         lifecycleScope.launch {
             viewModel.pages.collect {
                 Log.d("", "setupViews: ${it.size}")

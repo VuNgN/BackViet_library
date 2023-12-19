@@ -9,5 +9,18 @@
         android:id="@+id/requestAuthFragment"
         android:name="com.vungn.backvietlibrary.ui.requestauth.RequestAuthFragment"
         android:label="fragment_request_auth"
-        tools:layout="@layout/fragment_request_auth" />
+        tools:layout="@layout/fragment_request_auth">
+        <action
+            android:id="@+id/action_requestAuthFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_down"
+            app:exitAnim="@anim/slide_out_up"
+            app:popEnterAnim="@anim/slide_in_up"
+            app:popExitAnim="@anim/slide_out_down" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.vungn.backvietlibrary.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
 </navigation>
