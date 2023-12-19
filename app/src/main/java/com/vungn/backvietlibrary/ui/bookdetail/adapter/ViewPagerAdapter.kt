@@ -2,22 +2,27 @@ package com.vungn.backvietlibrary.ui.bookdetail.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.graphics.values
 import androidx.recyclerview.widget.RecyclerView
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.ItemPageViewPagerBinding
 import com.vungn.backvietlibrary.util.data.Page
 import com.vungn.backvietlibrary.util.gesture.ZoomInZoomOut
+import com.vungn.backvietlibrary.util.listener.OnImageZoom
 import com.vungn.backvietlibrary.util.listener.OnItemClick
+import com.vungn.backvietlibrary.util.listener.OnSinglePress
 import kotlin.math.round
 
 class ViewPagerAdapter(private val context: Context) :
     RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
     private var _data: MutableList<Page> = mutableListOf()
     private var _onItemClick: OnItemClick<Page>? = null
-    private var _isZoomable: Boolean = false
+    private var _onImageZoom: OnImageZoom? = null
+    private var _isZooming: Boolean = false
 
     var data: MutableList<Page>
         get() = _data
@@ -29,21 +34,37 @@ class ViewPagerAdapter(private val context: Context) :
         set(value) {
             _onItemClick = value
         }
-    var isZoomable: Boolean
-        get() = _isZoomable
+
+    var onImageZoom: OnImageZoom?
+        get() = _onImageZoom
         set(value) {
-            _isZoomable = value
+            _onImageZoom = value
+        }
+    var isZoomable: Boolean
+        get() = _isZooming
+        set(value) {
+            _isZooming = value
         }
 
     inner class PagerViewHolder(private val binding: ItemPageViewPagerBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        fun setupListener(page: Page) {
+            if (_isZooming) {
+                val zoomListener =
+                    ZoomInZoomOut(context, binding.imageView.imageMatrix.values()[Matrix.MSCALE_X])
+                zoomListener.onSinglePress = object : OnSinglePress {
+                    override fun onSinglePress() {
+                        _onItemClick?.onItemClick(page)
+                    }
+                }
+                zoomListener.onImageZoom = _onImageZoom
+                binding.imageView.setOnTouchListener(zoomListener)
+            }
+        }
 
         fun setupImage(bitmap: Bitmap) {
             val imageView = binding.imageView
             imageView.setImageBitmap(bitmap)
-//            if (_isZoomable) {
-//                imageView.setOnTouchListener(ZoomInZoomOut())
-//            }
             imageView.scaleType = ImageView.ScaleType.FIT_CENTER
         }
 
@@ -67,6 +88,7 @@ class ViewPagerAdapter(private val context: Context) :
         _data[position].apply {
             holder.setupImage(content)
             holder.setupPageInfo(page)
+            holder.setupListener(this)
             holder.itemView.setOnClickListener {
                 _onItemClick?.onItemClick(this)
             }

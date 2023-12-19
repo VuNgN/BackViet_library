@@ -28,6 +28,7 @@ import com.vungn.backvietlibrary.ui.bookdetail.adapter.ViewPagerAdapter
 import com.vungn.backvietlibrary.ui.bookdetail.contract.impl.BookDetailViewModelImpl
 import com.vungn.backvietlibrary.util.data.Page
 import com.vungn.backvietlibrary.util.getColorAttr
+import com.vungn.backvietlibrary.util.listener.OnImageZoom
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 import com.vungn.backvietlibrary.util.state.PageUpdateState
 import com.vungn.backvietlibrary.util.transformer.BookFlipPageTransformer2
@@ -234,16 +235,9 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
         binding.viewpager.visibility = View.GONE
         binding.viewpagerFullScreen.visibility = View.VISIBLE
         adapter.isZoomable = true
-        binding.viewpagerFullScreen.apply {
-            setCurrentItem(viewModel.currentPage.value?.page?.minus(1) ?: 0, false)
-            val bookFlipPageTransformer = BookFlipPageTransformer2()
-            bookFlipPageTransformer.isEnableScale = true
-            bookFlipPageTransformer.scaleAmountPercent = 10f
-            setPageTransformer(bookFlipPageTransformer)
-            setPadding(0)
-            offscreenPageLimit = 1
-            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        }
+        binding.viewpagerFullScreen.setCurrentItem(
+            viewModel.currentPage.value?.page?.minus(1) ?: 0, false
+        )
     }
 
     private fun showViews() {
@@ -252,24 +246,7 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
         binding.viewpager.visibility = View.VISIBLE
         binding.viewpagerFullScreen.visibility = View.GONE
         adapter.isZoomable = false
-        val targetWidth = screenSize.x * 2 / 3
-        val targetPaddingVertical = 40
-        val targetPaddingHorizontal = ((screenSize.x - targetWidth) / 2) + targetPaddingVertical
-        val targetHeight = screenSize.y * 2 / 3
         binding.viewpager.setCurrentItem(viewModel.currentPage.value?.page?.minus(1) ?: 0, false)
-        binding.viewpager.layoutParams.apply {
-            height = targetHeight
-        }
-        binding.viewpager.setPadding(
-            targetPaddingHorizontal,
-            targetPaddingVertical,
-            targetPaddingHorizontal,
-            targetPaddingVertical
-        )
-        binding.viewpager.offscreenPageLimit = 3
-        val compositePageTransformer = CompositePageTransformer()
-        compositePageTransformer.addTransformer(MarginPageTransformer(targetPaddingHorizontal / 2))
-        binding.viewpager.setPageTransformer(compositePageTransformer)
         binding.viewpager.computeScroll()
     }
 
@@ -313,14 +290,43 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
         pager.adapter = adapter
         pager.clipToPadding = false
         pager.clipChildren = false
+        val targetWidth = screenSize.x * 2 / 3
+        val targetPaddingVertical = 40
+        val targetPaddingHorizontal = ((screenSize.x - targetWidth) / 2) + targetPaddingVertical
+        val targetHeight = screenSize.y * 2 / 3
+        pager.layoutParams.apply {
+            height = targetHeight
+        }
+        pager.setPadding(
+            targetPaddingHorizontal,
+            targetPaddingVertical,
+            targetPaddingHorizontal,
+            targetPaddingVertical
+        )
+        pager.offscreenPageLimit = 3
+        val compositePageTransformer = CompositePageTransformer()
+        compositePageTransformer.addTransformer(MarginPageTransformer(targetPaddingHorizontal / 2))
+        pager.setPageTransformer(compositePageTransformer)
     }
 
     private fun setupPagerFullScreen() {
         mContentView = binding.viewpagerFullScreen
         val pager = binding.viewpagerFullScreen
+        adapter.onImageZoom = object : OnImageZoom {
+            override fun onImageZoom(isZooming: Boolean) {
+                pager.isUserInputEnabled = !isZooming
+            }
+        }
         pager.adapter = adapter
         pager.clipToPadding = false
         pager.clipChildren = false
+        val bookFlipPageTransformer = BookFlipPageTransformer2()
+        bookFlipPageTransformer.isEnableScale = true
+        bookFlipPageTransformer.scaleAmountPercent = 10f
+        pager.setPageTransformer(bookFlipPageTransformer)
+        pager.setPadding(0)
+        pager.offscreenPageLimit = 1
+        pager.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
     companion object {
