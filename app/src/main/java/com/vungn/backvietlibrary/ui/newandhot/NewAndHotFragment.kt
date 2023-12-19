@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentNewAndHotBinding
 import com.vungn.backvietlibrary.model.data.Book
@@ -60,10 +61,10 @@ class NewAndHotFragment : Fragment() {
         val adapter = RecycleViewAdapter(this.requireContext())
         adapter.data = books
         binding.recycleView.addItemDecoration(
-            DividerItemDecoration(
-                activity,
+            MaterialDividerItemDecoration(
+                requireContext(),
                 DividerItemDecoration.VERTICAL
-            )
+            ).also { it.isLastItemDecorated = false }
         )
         adapter.onItemClick = gotoBook
         binding.recycleView.adapter = adapter
