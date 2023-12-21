@@ -77,8 +77,12 @@ class BookDetailViewModelImpl @Inject constructor() : BookDetailViewModel, ViewM
     }
 
     override fun closeRenderer() {
-        pdfRenderer.close()
-        parcelFileDescriptor.close()
+        try {
+            pdfRenderer.close()
+            parcelFileDescriptor.close()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        }
     }
 
     override fun updatePage(page: Page) {
