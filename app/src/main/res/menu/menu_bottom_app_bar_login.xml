@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:enabled="false"
+        android:title="Login with"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/facebook"
+        android:contentDescription="Login with Facebook"
+        android:icon="@drawable/facebook"
+        android:title="Facebook"
+        app:iconTint="?colorOnSurfaceVariant"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/google"
+        android:contentDescription="Login with Google"
+        android:icon="@drawable/google"
+        android:title="Google"
+        app:iconTint="?colorOnSurfaceVariant"
+        app:showAsAction="ifRoom" />
+</menu>

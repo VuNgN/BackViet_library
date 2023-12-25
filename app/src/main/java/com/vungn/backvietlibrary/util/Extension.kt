@@ -37,6 +37,18 @@ fun Context.getColorAttr(attr: Int): Int {
     return color
 }
 
+fun Activity.hideSoftKeyboard() {
+    val inputMethodManager = this.getSystemService(
+        Activity.INPUT_METHOD_SERVICE
+    ) as InputMethodManager
+    if (inputMethodManager.isAcceptingText()) {
+        inputMethodManager.hideSoftInputFromWindow(
+            this.currentFocus!!.windowToken,
+            0
+        )
+    }
+}
+
 fun EditText.focus() {
     text?.let { setSelection(it.length) }
     postDelayed({

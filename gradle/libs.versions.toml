@@ -6,16 +6,17 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
-material = "1.12.0-alpha01"
-activity = "1.8.1"
+material = "1.12.0-alpha02"
+activity = "1.8.2"
 constraintlayout = "2.1.4"
 ksp = "1.9.20-1.0.14"
 hilt = "2.48"
-nav_version = "2.7.5"
+nav_version = "2.7.6"
 glide = "4.16.0"
 palette = "1.0.0"
 pdfviewer = "3.2.0-beta.1"
 image_zoom = "2.3.0"
+facebook = "latest.release"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,7 @@ glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", versi
 palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
 pdfviewer = { group = "com.github.barteksc", name = "android-pdf-viewer", version.ref = "pdfviewer" }
 imagezoom = { group = "it.sephiroth.android.library.imagezoom", name = "imagezoom", version.ref = "image_zoom" }
+facebook = { group = "com.facebook.android", name = "facebook-android-sdk", version.ref = "facebook" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
