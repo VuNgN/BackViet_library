@@ -14,4 +14,7 @@
     <string name="page_info">Page %1$s of %2$s</string>
     <string name="page_percent">%1$s%%</string>
     <string name="page_number">%1$s / %2$s</string>
+    <string name="facebook_app_id">866306161901150</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">ae95bdc950d1dc7f7918c536abf48cdb</string>
 </resources>

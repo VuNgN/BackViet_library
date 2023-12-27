@@ -17,6 +17,9 @@ palette = "1.0.0"
 pdfviewer = "3.2.0-beta.1"
 image_zoom = "2.3.0"
 facebook = "latest.release"
+retrofit = "2.9.0"
+gson = "2.10.1"
+datastore = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +41,10 @@ palette = { group = "androidx.palette", name = "palette", version.ref = "palette
 pdfviewer = { group = "com.github.barteksc", name = "android-pdf-viewer", version.ref = "pdfviewer" }
 imagezoom = { group = "it.sephiroth.android.library.imagezoom", name = "imagezoom", version.ref = "image_zoom" }
 facebook = { group = "com.facebook.android", name = "facebook-android-sdk", version.ref = "facebook" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -14,14 +14,19 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.vungn.backvietlibrary.databinding.FragmentLoginBinding
+import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.login.contract.impl.LoginViewModelImpl
+import com.vungn.backvietlibrary.util.helper.DialogHelper
 import com.vungn.backvietlibrary.util.hideSoftKeyboard
+import com.vungn.backvietlibrary.util.state.LoginState
 import kotlinx.coroutines.launch
 
 
 class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
     private lateinit var callbackManager: CallbackManager
+    private lateinit var dialogHelper: DialogHelper
+
     override fun getViewBinding(): FragmentLoginBinding =
         FragmentLoginBinding.inflate(layoutInflater)
 
@@ -79,6 +84,31 @@ class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
     }
 
     override fun setupViews() {
+        setupBackground()
+        lifecycleScope.launch {
+            viewModel.loginState.collect { loginState ->
+                when (loginState) {
+                    LoginState.NONE -> {}
+                    LoginState.LOADING -> {
+                        dialogHelper = DialogHelper(requireActivity())
+                        dialogHelper.startLoadingDialog()
+                    }
+
+                    LoginState.SUCCESS -> {
+                        dialogHelper.dismissDialog()
+                        (requireActivity() as AuthActivity).onBackPressedMethod()
+                        requireActivity().finish()
+                    }
+
+                    LoginState.FAIL -> {
+                        dialogHelper.dismissDialog()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupBackground() {
         val typedValue = TypedValue()
         val theme = requireContext().theme
         theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
