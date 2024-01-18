@@ -7,7 +7,6 @@ import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -52,7 +51,7 @@ class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
             })
 
         binding.close.setOnClickListener {
-            findNavController().popBackStack()
+            navController.popBackStack()
         }
 
         if (view !is EditText) {

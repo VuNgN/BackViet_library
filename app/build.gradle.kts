@@ -21,11 +21,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://test.thuvien247.vn/\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
+            buildConfigField("String", "BASE_URL", "\"https://test.thuvien247.vn/\"")
         }
     }
     compileOptions {
@@ -38,6 +42,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        buildConfig = true
     }
 }
 
@@ -66,6 +71,7 @@ dependencies {
 
     // Glide
     implementation(libs.glide)
+    implementation(libs.play.services.basement)
     annotationProcessor(libs.glide.compiler)
 
     // Nav

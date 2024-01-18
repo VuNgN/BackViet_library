@@ -6,7 +6,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.vungn.backvietlibrary.model.data.AuthResponse
+import com.vungn.backvietlibrary.model.data.UserResponse
+import com.vungn.backvietlibrary.model.repo.GetUserRepo
 import com.vungn.backvietlibrary.model.repo.LoginRepo
 import com.vungn.backvietlibrary.ui.login.contract.LoginViewModel
 import com.vungn.backvietlibrary.util.key.PreferenceKey
@@ -22,7 +25,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModelImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>, private val loginRepo: LoginRepo
+    private val dataStore: DataStore<Preferences>,
+    private val loginRepo: LoginRepo,
+    private val userRepo: GetUserRepo
 ) : LoginViewModel, ViewModel() {
     private val _username: MutableStateFlow<String> = MutableStateFlow("")
     private val _password: MutableStateFlow<String> = MutableStateFlow("")
@@ -59,6 +64,9 @@ class LoginViewModelImpl @Inject constructor(
                                         settings[PreferenceKey.REFRESH_TOKEN] = refreshToken
                                     }
                                 }
+                                if (accessToken != null) {
+                                    saveUser(accessToken)
+                                }
                                 _loginState.emit(LoginState.SUCCESS)
                             } else {
                                 _loginState.emit(LoginState.FAIL)
@@ -71,6 +79,40 @@ class LoginViewModelImpl @Inject constructor(
                         call.cancel()
                     }
                 })
+        }
+    }
+
+    private fun saveUser(accessToken: String) {
+        viewModelScope.launch {
+            userRepo.getUser(accessToken).enqueue(object : Callback<UserResponse> {
+                override fun onResponse(
+                    call: Call<UserResponse>,
+                    response: Response<UserResponse>
+                ) {
+                    val userResponse = response.body()
+                    val displayName = userResponse?.value?.displayName
+                    val avatarUrl = userResponse?.value?.avatar
+                    viewModelScope.launch {
+                        if (response.isSuccessful) {
+                            Log.d(TAG, "onResponse: User: ${Gson().toJson(userResponse)}")
+                            dataStore.edit { settings ->
+                                if (displayName != null) {
+                                    settings[PreferenceKey.DISPLAY_NAME] = displayName
+                                }
+                                if (avatarUrl != null) {
+                                    settings[PreferenceKey.AVATAR_URL] =
+                                        avatarUrl.replace(" ", "%20")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                    Log.e(TAG, "onFailure: ", t)
+                    call.cancel()
+                }
+            })
         }
     }
 

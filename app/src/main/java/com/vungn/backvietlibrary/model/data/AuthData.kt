@@ -7,5 +7,7 @@ data class AuthData(
     val refreshToken: String,
     val expiresRefreshToken: String,
     @SerializedName("expiress")
-    val expired: String
+    val expired: String,
+    @SerializedName("deviceInfor")
+    val deviceInfo: DeviceInformation?
 )

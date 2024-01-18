@@ -2,16 +2,18 @@ package com.vungn.backvietlibrary.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.UncontainedCarouselStrategy
 import com.vungn.backvietlibrary.R
@@ -20,35 +22,46 @@ import com.vungn.backvietlibrary.model.data.Book
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
+import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.home.adapter.BookCategoryAdapter
 import com.vungn.backvietlibrary.ui.home.adapter.CarouselBookCategoryAdapter
 import com.vungn.backvietlibrary.ui.home.adapter.ViewPagerAdapter
+import com.vungn.backvietlibrary.ui.home.contract.impl.HomeViewModelImpl
 import com.vungn.backvietlibrary.util.GridItemDecoration
 import com.vungn.backvietlibrary.util.books
 import com.vungn.backvietlibrary.util.listener.OnItemClick
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-class HomeFragment : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
+@AndroidEntryPoint
+class HomeFragment : FragmentBase<FragmentHomeBinding, HomeViewModelImpl>() {
+    override fun getViewBinding(): FragmentHomeBinding = FragmentHomeBinding.inflate(layoutInflater)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun getViewModelClass(): Class<HomeViewModelImpl> = HomeViewModelImpl::class.java
+
+    private fun setupTopAppBar() {
+        lifecycleScope.launch {
+            viewModel.avatar.collect { url ->
+                Glide.with(requireContext()).asDrawable().load(url).circleCrop()
+                    .into(object :
+                        CustomTarget<Drawable>() {
+                        override fun onResourceReady(
+                            resource: Drawable,
+                            transition: Transition<in Drawable>?
+                        ) {
+                            binding.toolbar.menu.getItem(1).setIcon(resource)
+                        }
+
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                            binding.toolbar.menu.getItem(1).setIcon(placeholder)
+                        }
+                    })
+            }
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupListener()
-        setupViewPager()
-        setupBookCategoryFirstTime()
-        setupBookCategoryForYou()
-    }
-
-    private fun setupListener() {
+    override fun setupListener() {
         binding.apply {
             toolbar.setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -67,6 +80,13 @@ class HomeFragment : Fragment() {
                 true
             }
         }
+    }
+
+    override fun setupViews() {
+        setupViewPager()
+        setupBookCategoryFirstTime()
+        setupBookCategoryForYou()
+        setupTopAppBar()
     }
 
     @SuppressLint("RestrictedApi")

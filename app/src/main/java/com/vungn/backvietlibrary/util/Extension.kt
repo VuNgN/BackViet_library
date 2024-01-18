@@ -62,3 +62,5 @@ fun EditText.focus() {
         }
     }, 200)
 }
+
+fun String.toBearerToken() = "Bearer $this"
