@@ -17,7 +17,7 @@ class LoginRepo @Inject constructor(private val userService: UserService) {
                     usernameOrEmail = username,
                     password = password,
                     remember = true,
-                    deviceInfor = DeviceInformation("", "")
+                    deviceInfo = DeviceInformation("", "")
                 )
             )
         }

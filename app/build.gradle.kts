@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -47,6 +48,12 @@ android {
 }
 
 dependencies {
+    // OkHttp
+    implementation(libs.okhttp.logging.interceptor)
+
+    // circleimageview
+    implementation(libs.circleimageview)
+
     // Datastore
     implementation(libs.datastore)
 

@@ -4,15 +4,15 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.vungn.backvietlibrary.BuildConfig
 import com.vungn.backvietlibrary.model.service.UserService
+import com.vungn.backvietlibrary.network.NetworkEventInterceptor
 import com.vungn.backvietlibrary.network.SuspendInterceptor
 import com.vungn.backvietlibrary.network.TokenAuthenticator
-import com.vungn.backvietlibrary.util.key.PreferenceKey
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.flow.first
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -32,10 +32,15 @@ object ServiceProvider {
     @Provides
     @Singleton
     fun okHttpClientProvider(
-        tokenAuthenticator: TokenAuthenticator, dataStore: DataStore<Preferences>
+        tokenAuthenticator: TokenAuthenticator,
+        dataStore: DataStore<Preferences>,
+        networkEventInterceptor: NetworkEventInterceptor
     ): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder().addInterceptor(SuspendInterceptor(dataStore))
-            .authenticator(tokenAuthenticator).build()
+            .authenticator(tokenAuthenticator).addInterceptor(networkEventInterceptor)
+            .addInterceptor(loggingInterceptor).build()
     }
 
     @Provides

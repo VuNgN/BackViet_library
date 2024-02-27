@@ -6,12 +6,12 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
-material = "1.12.0-alpha02"
+material = "1.12.0-alpha03"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
 ksp = "1.9.20-1.0.14"
 hilt = "2.48"
-nav_version = "2.7.6"
+nav_version = "2.7.7"
 glide = "4.16.0"
 palette = "1.0.0"
 pdfviewer = "3.2.0-beta.1"
@@ -21,6 +21,8 @@ retrofit = "2.9.0"
 gson = "2.10.1"
 datastore = "1.0.0"
 playServicesBasement = "18.3.0"
+circleImageView = "3.1.0"
+okhttp-logging-interceptor = "4.12.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +49,8 @@ retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ver
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 play-services-basement = { group = "com.google.android.gms", name = "play-services-basement", version.ref = "playServicesBasement" }
+circleimageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleImageView" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging-interceptor"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

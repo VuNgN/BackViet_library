@@ -6,15 +6,14 @@ import com.vungn.backvietlibrary.model.data.UserResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 
-public interface UserService {
+interface UserService {
     @POST("/api/Auth/login")
     fun singIn(
         @Body loginRequest: LoginRequest
     ): Call<AuthResponse>
 
-    @GET("/api/Reader")
-    fun getUser(@Header("Authorization") token: String): Call<UserResponse>
+    @GET("api/Reader")
+    fun getUser(): Call<UserResponse>
 }

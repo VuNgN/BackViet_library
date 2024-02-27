@@ -3,8 +3,6 @@ package com.vungn.backvietlibrary.ui.home
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +17,7 @@ import com.google.android.material.carousel.UncontainedCarouselStrategy
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentHomeBinding
 import com.vungn.backvietlibrary.model.data.Book
-import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
+import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
@@ -43,6 +41,10 @@ class HomeFragment : FragmentBase<FragmentHomeBinding, HomeViewModelImpl>() {
     private fun setupTopAppBar() {
         lifecycleScope.launch {
             viewModel.avatar.collect { url ->
+                if (url == null) {
+                    binding.toolbar.menu.getItem(1).setIcon(R.drawable.round_account_circle_24)
+                    return@collect
+                }
                 Glide.with(requireContext()).asDrawable().load(url).circleCrop()
                     .into(object :
                         CustomTarget<Drawable>() {
@@ -66,7 +68,7 @@ class HomeFragment : FragmentBase<FragmentHomeBinding, HomeViewModelImpl>() {
             toolbar.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.account -> {
-                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        val intent = Intent(requireContext(), AccountActivity::class.java)
                         startActivity(intent)
                     }
 

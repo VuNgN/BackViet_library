@@ -6,9 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
 import com.vungn.backvietlibrary.model.data.AuthResponse
 import com.vungn.backvietlibrary.model.data.UserResponse
+import com.vungn.backvietlibrary.model.repo.BaseRepo
 import com.vungn.backvietlibrary.model.repo.GetUserRepo
 import com.vungn.backvietlibrary.model.repo.LoginRepo
 import com.vungn.backvietlibrary.ui.login.contract.LoginViewModel
@@ -17,6 +17,7 @@ import com.vungn.backvietlibrary.util.state.LoginState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,7 +66,7 @@ class LoginViewModelImpl @Inject constructor(
                                     }
                                 }
                                 if (accessToken != null) {
-                                    saveUser(accessToken)
+                                    saveUser()
                                 }
                                 _loginState.emit(LoginState.SUCCESS)
                             } else {
@@ -82,37 +83,30 @@ class LoginViewModelImpl @Inject constructor(
         }
     }
 
-    private fun saveUser(accessToken: String) {
+    private fun saveUser() {
         viewModelScope.launch {
-            userRepo.getUser(accessToken).enqueue(object : Callback<UserResponse> {
-                override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
-                ) {
-                    val userResponse = response.body()
-                    val displayName = userResponse?.value?.displayName
-                    val avatarUrl = userResponse?.value?.avatar
+            userRepo.execute(object : BaseRepo.Callback<UserResponse> {
+                override fun onSuccess(data: UserResponse) {
+                    val displayName = data.value.displayName
+                    val avatarUrl = data.value.avatar
                     viewModelScope.launch {
-                        if (response.isSuccessful) {
-                            Log.d(TAG, "onResponse: User: ${Gson().toJson(userResponse)}")
-                            dataStore.edit { settings ->
-                                if (displayName != null) {
-                                    settings[PreferenceKey.DISPLAY_NAME] = displayName
-                                }
-                                if (avatarUrl != null) {
-                                    settings[PreferenceKey.AVATAR_URL] =
-                                        avatarUrl.replace(" ", "%20")
-                                }
+                        dataStore.edit { settings ->
+                            settings[PreferenceKey.DISPLAY_NAME] = displayName
+                            if (avatarUrl != null) {
+                                settings[PreferenceKey.AVATAR_URL] =
+                                    avatarUrl.replace(" ", "%20")
                             }
                         }
                     }
                 }
 
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    Log.e(TAG, "onFailure: ", t)
-                    call.cancel()
+                override fun onError(error: Throwable) {
+                    Log.e(TAG, "onFailure: ", error)
                 }
-            })
+
+                override fun onRelease() {
+                }
+            }).launchIn(viewModelScope)
         }
     }
 

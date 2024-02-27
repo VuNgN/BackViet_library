@@ -5,11 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vungn.backvietlibrary.model.repo.GetUserRepo
 import com.vungn.backvietlibrary.network.NetworkEvent
 import com.vungn.backvietlibrary.network.NetworkState
 import com.vungn.backvietlibrary.ui.home.contract.HomeViewModel
-import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.key.PreferenceKey
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,25 +19,25 @@ import javax.inject.Inject
 class HomeViewModelImpl @Inject constructor(
     dataStore: DataStore<Preferences>,
     networkEvent: NetworkEvent,
-    getUserRepo: GetUserRepo
 ) : HomeViewModel, ViewModel() {
-    private val _avatar: MutableStateFlow<String> = MutableStateFlow("")
-    override val avatar: StateFlow<String>
+    private val _avatar: MutableStateFlow<String?> = MutableStateFlow(null)
+    override val avatar: StateFlow<String?>
         get() = _avatar
 
     init {
         viewModelScope.launch {
             dataStore.data.collect { preferences ->
-                val avatar = preferences[PreferenceKey.AVATAR_URL] ?: Common.defaultBookCover
-                val accessToken = preferences[PreferenceKey.ACCESS_TOKEN] ?: ""
-
+                val avatar = preferences[PreferenceKey.AVATAR_URL]
                 _avatar.emit(avatar)
-                getUserRepo.getUser(accessToken)
             }
         }
         viewModelScope.launch {
             networkEvent.observableNetworkState.collect {
                 when (it) {
+                    is NetworkState.CONNECTED -> {
+                        Log.d(TAG, "network state: CONNECTED")
+                    }
+
                     is NetworkState.UNAUTHORIZED -> {
                         Log.d(TAG, "network state: UNAUTHORIZED")
                     }

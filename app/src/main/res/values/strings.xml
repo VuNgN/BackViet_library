@@ -17,4 +17,5 @@
     <string name="facebook_app_id">866306161901150</string>
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">ae95bdc950d1dc7f7918c536abf48cdb</string>
+    <string name="logout">Logout</string>
 </resources>

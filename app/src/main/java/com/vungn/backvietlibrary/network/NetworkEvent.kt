@@ -7,8 +7,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
 sealed class NetworkState {
+    object CONNECTED : NetworkState()
     object NO_INTERNET : NetworkState()
     object CONNECTION_LOST : NetworkState()
     object FORBIDDEN : NetworkState()
@@ -21,6 +23,7 @@ sealed class NetworkState {
     data class GENERIC(val exception: ApiException) : NetworkState()
 }
 
+@Singleton
 class NetworkEvent @Inject constructor(
     @CoroutineScopeMain private val coroutineScopeMain: CoroutineScope,
 ) {
@@ -30,7 +33,7 @@ class NetworkEvent @Inject constructor(
 
     fun publish(networkState: NetworkState) {
         coroutineScopeMain.launch {
-            _observableNetworkState.value = networkState
+            _observableNetworkState.emit(networkState)
         }
     }
 }

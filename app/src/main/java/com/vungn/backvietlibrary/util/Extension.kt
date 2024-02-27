@@ -4,6 +4,8 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.TypedValue
 import android.view.View
 import android.view.animation.AlphaAnimation
@@ -64,3 +66,13 @@ fun EditText.focus() {
 }
 
 fun String.toBearerToken() = "Bearer $this"
+
+fun String.toPrice() = "$this vnđ"
+
+fun Context.isNetworkAvailable(): Boolean {
+    val connectivityManager =
+        this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+    return networkCapabilities != null && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+}

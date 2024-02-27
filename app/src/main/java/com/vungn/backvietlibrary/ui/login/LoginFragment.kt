@@ -6,7 +6,9 @@ import android.util.TypedValue
 import android.widget.EditText
 import androidx.annotation.ColorInt
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -55,7 +57,7 @@ class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
         }
 
         if (view !is EditText) {
-            view?.setOnTouchListener { v, event ->
+            view?.setOnTouchListener { v, _ ->
                 v.performClick()
                 requireActivity().hideSoftKeyboard()
                 false
@@ -85,22 +87,24 @@ class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
     override fun setupViews() {
         setupBackground()
         lifecycleScope.launch {
-            viewModel.loginState.collect { loginState ->
-                when (loginState) {
-                    LoginState.NONE -> {}
-                    LoginState.LOADING -> {
-                        dialogHelper = DialogHelper(requireActivity())
-                        dialogHelper.startLoadingDialog()
-                    }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.loginState.collect { loginState ->
+                    when (loginState) {
+                        LoginState.NONE -> {}
+                        LoginState.LOADING -> {
+                            dialogHelper = DialogHelper(requireActivity())
+                            dialogHelper.startLoadingDialog()
+                        }
 
-                    LoginState.SUCCESS -> {
-                        dialogHelper.dismissDialog()
-                        (requireActivity() as AuthActivity).onBackPressedMethod()
-                        requireActivity().finish()
-                    }
+                        LoginState.SUCCESS -> {
+                            dialogHelper.dismissDialog()
+                            (requireActivity() as AuthActivity).onBackPressedMethod()
+                            requireActivity().finish()
+                        }
 
-                    LoginState.FAIL -> {
-                        dialogHelper.dismissDialog()
+                        LoginState.FAIL -> {
+                            dialogHelper.dismissDialog()
+                        }
                     }
                 }
             }
