@@ -1,6 +1,5 @@
 package com.vungn.backvietlibrary.ui.library
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentLibraryBinding
-import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
-import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
+import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 import com.vungn.backvietlibrary.ui.library.adapter.ViewPagerAdapter
 import com.vungn.backvietlibrary.util.data.Category
 
@@ -34,37 +31,21 @@ class LibraryFragment : Fragment() {
         setupListener()
     }
 
+    private fun setupListener() {}
+
     private fun setupUi() {
+        (requireActivity() as MainActivity).apply {
+            setTopBarTitle("Library")
+            setupTabLayout(setupListener = ::setupTabListener)
+        }
         val adapter =
             ViewPagerAdapter(requireActivity().supportFragmentManager, requireActivity().lifecycle)
         adapter.size = Category.entries.size
         binding.viewPager2.adapter = adapter
-        repeat(Category.entries.size) {
-            binding.tabLayout.addTab(
-                binding.tabLayout.newTab().setIcon(Category.entries[it].resource)
-                    .setText(Category.entries[it].title)
-            )
-        }
     }
 
-    private fun setupListener() {
+    private fun setupTabListener(tabLayout: TabLayout) {
         binding.apply {
-            toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.account -> {
-                        val intent = Intent(requireContext(), AuthActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    R.id.item_search -> {
-                        val intent = Intent(requireContext(), SearchActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    else -> {}
-                }
-                true
-            }
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(p0: TabLayout.Tab?) {
                     if (p0 != null) {
@@ -79,9 +60,19 @@ class LibraryFragment : Fragment() {
             viewPager2.registerOnPageChangeCallback(object : OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
+                    tabLayout.selectTab(tabLayout.getTabAt(position))
                 }
             })
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (requireActivity() as MainActivity).showTabLayout()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (requireActivity() as MainActivity).hideTabLayout()
     }
 }

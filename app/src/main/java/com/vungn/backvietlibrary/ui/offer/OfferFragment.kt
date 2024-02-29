@@ -1,15 +1,12 @@
 package com.vungn.backvietlibrary.ui.offer
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentOfferBinding
-import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
-import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
+import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 
 class OfferFragment : Fragment() {
     private lateinit var binding: FragmentOfferBinding
@@ -26,26 +23,15 @@ class OfferFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupListener()
+        setupView()
+    }
+
+    private fun setupView() {
+        (requireActivity() as MainActivity).setTopBarTitle("Offer")
     }
 
     private fun setupListener() {
         binding.apply {
-            toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.account -> {
-                        val intent = Intent(requireContext(), AuthActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    R.id.item_search -> {
-                        val intent = Intent(requireContext(), SearchActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    else -> {}
-                }
-                true
-            }
         }
     }
 }

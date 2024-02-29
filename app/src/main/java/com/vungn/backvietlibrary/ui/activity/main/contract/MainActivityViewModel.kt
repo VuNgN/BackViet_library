@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface MainActivityViewModel {
     val networkState: StateFlow<NetworkState>
+    val avatar: StateFlow<String?>
 }

@@ -2,24 +2,17 @@ package com.vungn.backvietlibrary.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.drawable.Drawable
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.UncontainedCarouselStrategy
-import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentHomeBinding
 import com.vungn.backvietlibrary.model.data.Book
-import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
-import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
+import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.home.adapter.BookCategoryAdapter
 import com.vungn.backvietlibrary.ui.home.adapter.CarouselBookCategoryAdapter
@@ -29,7 +22,6 @@ import com.vungn.backvietlibrary.util.GridItemDecoration
 import com.vungn.backvietlibrary.util.books
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -38,57 +30,14 @@ class HomeFragment : FragmentBase<FragmentHomeBinding, HomeViewModelImpl>() {
 
     override fun getViewModelClass(): Class<HomeViewModelImpl> = HomeViewModelImpl::class.java
 
-    private fun setupTopAppBar() {
-        lifecycleScope.launch {
-            viewModel.avatar.collect { url ->
-                if (url == null) {
-                    binding.toolbar.menu.getItem(1).setIcon(R.drawable.round_account_circle_24)
-                    return@collect
-                }
-                Glide.with(requireContext()).asDrawable().load(url).circleCrop()
-                    .into(object :
-                        CustomTarget<Drawable>() {
-                        override fun onResourceReady(
-                            resource: Drawable,
-                            transition: Transition<in Drawable>?
-                        ) {
-                            binding.toolbar.menu.getItem(1).setIcon(resource)
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                            binding.toolbar.menu.getItem(1).setIcon(placeholder)
-                        }
-                    })
-            }
-        }
-    }
-
     override fun setupListener() {
-        binding.apply {
-            toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.account -> {
-                        val intent = Intent(requireContext(), AccountActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    R.id.item_search -> {
-                        val intent = Intent(requireContext(), SearchActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    else -> {}
-                }
-                true
-            }
-        }
     }
 
     override fun setupViews() {
+        (requireActivity() as MainActivity).setTopBarTitle("Thư viện sách")
         setupViewPager()
         setupBookCategoryFirstTime()
         setupBookCategoryForYou()
-        setupTopAppBar()
     }
 
     @SuppressLint("RestrictedApi")

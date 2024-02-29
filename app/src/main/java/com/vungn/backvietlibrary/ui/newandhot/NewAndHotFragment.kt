@@ -9,12 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentNewAndHotBinding
 import com.vungn.backvietlibrary.model.data.Book
-import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
-import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
+import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 import com.vungn.backvietlibrary.ui.newandhot.adapter.RecycleViewAdapter
 import com.vungn.backvietlibrary.util.books
 import com.vungn.backvietlibrary.util.listener.OnItemClick
@@ -37,27 +35,10 @@ class NewAndHotFragment : Fragment() {
     }
 
     private fun setupListener() {
-        binding.apply {
-            toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.account -> {
-                        val intent = Intent(requireContext(), AuthActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    R.id.item_search -> {
-                        val intent = Intent(requireContext(), SearchActivity::class.java)
-                        startActivity(intent)
-                    }
-
-                    else -> {}
-                }
-                true
-            }
-        }
     }
 
     private fun setupUi() {
+        (requireActivity() as MainActivity).setTopBarTitle("New & Hot")
         val adapter = RecycleViewAdapter(this.requireContext())
         adapter.data = books
         binding.recycleView.addItemDecoration(
