@@ -1,4 +1,4 @@
-package com.vungn.backvietlibrary.util
+package com.vungn.backvietlibrary.util.extension
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
@@ -64,10 +64,6 @@ fun EditText.focus() {
         }
     }, 200)
 }
-
-fun String.toBearerToken() = "Bearer $this"
-
-fun String.toPrice() = "$this vnđ"
 
 fun Context.isNetworkAvailable(): Boolean {
     val connectivityManager =

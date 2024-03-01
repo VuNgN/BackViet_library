@@ -1,6 +1,7 @@
 package com.vungn.backvietlibrary.model.service
 
 import com.vungn.backvietlibrary.model.data.AuthResponse
+import com.vungn.backvietlibrary.model.data.CategoryResponse
 import com.vungn.backvietlibrary.model.data.LoginRequest
 import com.vungn.backvietlibrary.model.data.UserResponse
 import retrofit2.Call
@@ -16,4 +17,7 @@ interface UserService {
 
     @GET("api/Reader")
     fun getUser(): Call<UserResponse>
+
+    @GET("api/Category")
+    fun getCategories(): Call<CategoryResponse>
 }

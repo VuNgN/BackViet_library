@@ -10,7 +10,7 @@ import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.ActivitySearchBinding
 import com.vungn.backvietlibrary.ui.activity.search.adapter.RecycleViewAdapter
 import com.vungn.backvietlibrary.util.books
-import com.vungn.backvietlibrary.util.focus
+import com.vungn.backvietlibrary.util.extension.focus
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding

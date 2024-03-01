@@ -1,5 +1,7 @@
 package com.vungn.backvietlibrary.ui.requestauth
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentRequestAuthBinding
+import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
 
 class RequestAuthFragment : Fragment() {
@@ -30,6 +33,11 @@ class RequestAuthFragment : Fragment() {
         binding.apply {
             toolbar.apply {
                 setNavigationOnClickListener {
+                    val intent = Intent()
+                    val bundle = Bundle()
+                    bundle.putBoolean(AccountActivity.RESULT_BUNDLE_KEY, false)
+                    intent.putExtras(bundle)
+                    (requireActivity() as AuthActivity).setResult(RESULT_OK, intent)
                     requireActivity().finish()
                     (requireActivity() as AuthActivity).onBackPressedMethod()
                 }

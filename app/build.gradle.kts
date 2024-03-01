@@ -48,6 +48,11 @@ android {
 }
 
 dependencies {
+    // Room
+    implementation(libs.room)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+
     // OkHttp
     implementation(libs.okhttp.logging.interceptor)
 

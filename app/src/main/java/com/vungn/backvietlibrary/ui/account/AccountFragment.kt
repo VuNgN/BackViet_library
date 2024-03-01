@@ -18,9 +18,8 @@ import com.vungn.backvietlibrary.databinding.FragmentAccountBinding
 import com.vungn.backvietlibrary.ui.account.contract.impl.AccountViewModelImpl
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.util.enums.CallApiState
-import com.vungn.backvietlibrary.util.startAlphaAnimation
-import com.vungn.backvietlibrary.util.startBackgroundAnimation
-import com.vungn.backvietlibrary.util.toPrice
+import com.vungn.backvietlibrary.util.extension.startAlphaAnimation
+import com.vungn.backvietlibrary.util.extension.startBackgroundAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -78,8 +77,6 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
                 viewModel.user.collect { user ->
                     binding.mainTextviewSmallTitle.text = user?.displayName
                     binding.mainTextviewLargeTitle.text = user?.displayName
-                    binding.mainTextviewLargeSubtitle.text =
-                        (user?.wallet?.toString() ?: "0").toPrice()
                     Glide.with(requireContext()).asBitmap().load(user?.avatar).circleCrop()
                         .into(object :
                             CustomTarget<Bitmap>() {
@@ -141,6 +138,11 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
                 mIsTheTitleContainerVisible = true
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getUser()
     }
 
     companion object {

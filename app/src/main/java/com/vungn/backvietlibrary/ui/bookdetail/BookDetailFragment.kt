@@ -27,7 +27,7 @@ import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.bookdetail.adapter.ViewPagerAdapter
 import com.vungn.backvietlibrary.ui.bookdetail.contract.impl.BookDetailViewModelImpl
 import com.vungn.backvietlibrary.util.data.Page
-import com.vungn.backvietlibrary.util.getColorAttr
+import com.vungn.backvietlibrary.util.extension.getColorAttr
 import com.vungn.backvietlibrary.util.listener.OnImageZoom
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 import com.vungn.backvietlibrary.util.state.PageUpdateState

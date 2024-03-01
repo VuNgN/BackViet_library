@@ -1,6 +1,9 @@
 package com.vungn.backvietlibrary.ui.login
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
+import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.widget.EditText
@@ -15,11 +18,12 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.vungn.backvietlibrary.databinding.FragmentLoginBinding
+import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.login.contract.impl.LoginViewModelImpl
+import com.vungn.backvietlibrary.util.extension.hideSoftKeyboard
 import com.vungn.backvietlibrary.util.helper.DialogHelper
-import com.vungn.backvietlibrary.util.hideSoftKeyboard
 import com.vungn.backvietlibrary.util.state.LoginState
 import kotlinx.coroutines.launch
 
@@ -98,6 +102,11 @@ class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
 
                         LoginState.SUCCESS -> {
                             dialogHelper.dismissDialog()
+                            val intent = Intent()
+                            val bundle = Bundle()
+                            bundle.putBoolean(AccountActivity.RESULT_BUNDLE_KEY, true)
+                            intent.putExtras(bundle)
+                            (requireActivity() as AuthActivity).setResult(RESULT_OK, intent)
                             (requireActivity() as AuthActivity).onBackPressedMethod()
                             requireActivity().finish()
                         }

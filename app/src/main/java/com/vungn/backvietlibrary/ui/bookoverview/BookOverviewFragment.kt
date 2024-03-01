@@ -28,10 +28,9 @@ import com.vungn.backvietlibrary.databinding.FragmentBookOverviewBinding
 import com.vungn.backvietlibrary.model.data.Book
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity.Companion.KEY_BUNDLE_BOOK
-import com.vungn.backvietlibrary.util.startAlphaAnimation
-import com.vungn.backvietlibrary.util.startBackgroundAnimation
+import com.vungn.backvietlibrary.util.extension.startAlphaAnimation
+import com.vungn.backvietlibrary.util.extension.startBackgroundAnimation
 import kotlin.math.abs
-
 
 class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     private lateinit var binding: FragmentBookOverviewBinding

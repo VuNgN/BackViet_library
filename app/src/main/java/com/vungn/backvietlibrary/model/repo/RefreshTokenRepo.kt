@@ -47,8 +47,8 @@ class RefreshTokenRepo @Inject constructor(
             if (response.isSuccessful) {
                 val authResponse = gson.fromJson(response.body?.string(), AuthResponse::class.java)
                 dataStore.edit {
-                    it[PreferenceKey.ACCESS_TOKEN] = authResponse.value.accessToken
-                    it[PreferenceKey.REFRESH_TOKEN] = authResponse.value.refreshToken
+                    it[PreferenceKey.ACCESS_TOKEN] = authResponse.data.accessToken
+                    it[PreferenceKey.REFRESH_TOKEN] = authResponse.data.refreshToken
                 }
             }
             return@runBlocking response.isSuccessful

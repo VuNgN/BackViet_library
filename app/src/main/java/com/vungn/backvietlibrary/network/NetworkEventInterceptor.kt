@@ -3,7 +3,7 @@ package com.vungn.backvietlibrary.network
 import android.content.Context
 import com.google.android.gms.common.api.ApiException
 import com.google.gson.Gson
-import com.vungn.backvietlibrary.util.isNetworkAvailable
+import com.vungn.backvietlibrary.util.extension.isNetworkAvailable
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Interceptor
 import okhttp3.Response
