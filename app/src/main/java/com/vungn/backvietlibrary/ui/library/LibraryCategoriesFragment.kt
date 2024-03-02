@@ -8,21 +8,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vungn.backvietlibrary.databinding.FragmentLibraryCategoriesBinding
+import com.vungn.backvietlibrary.db.entity.CategoryEntity
 import com.vungn.backvietlibrary.model.data.Book
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.library.adapter.BookCategoryAdapter
 import com.vungn.backvietlibrary.util.GridItemDecoration
 import com.vungn.backvietlibrary.util.books
-import com.vungn.backvietlibrary.util.data.Category
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 class LibraryCategoriesFragment : Fragment {
     private lateinit var binding: FragmentLibraryCategoriesBinding
-    private var category: Category
+    private var category: CategoryEntity?
 
-    constructor() : this(Category.ALL)
+    constructor() : this(null)
 
-    constructor(category: Category) {
+    constructor(category: CategoryEntity?) {
         this.category = category
     }
 
@@ -39,7 +39,7 @@ class LibraryCategoriesFragment : Fragment {
     }
 
     private fun setupUi() {
-        binding.title.text = category.title
+        binding.title.text = category?.name
         val adapter = BookCategoryAdapter(requireContext())
         adapter.data = books
         adapter.onItemClick = gotoBook

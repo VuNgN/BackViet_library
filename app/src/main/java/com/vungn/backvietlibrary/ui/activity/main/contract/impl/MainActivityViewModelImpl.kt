@@ -2,7 +2,7 @@ package com.vungn.backvietlibrary.ui.activity.main.contract.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vungn.backvietlibrary.model.data.CategoryData
+import com.vungn.backvietlibrary.db.entity.CategoryEntity
 import com.vungn.backvietlibrary.model.data.CategoryResponse
 import com.vungn.backvietlibrary.model.repo.BaseRepo
 import com.vungn.backvietlibrary.model.repo.GetCategoriesRepo
@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -31,8 +32,8 @@ class MainActivityViewModelImpl @Inject constructor(
     private val _avatar: MutableStateFlow<String?> = MutableStateFlow(null)
     override val avatar: StateFlow<String?>
         get() = _avatar
-    private val _categories: MutableStateFlow<CategoryData?> = MutableStateFlow(null)
-    override val categories: StateFlow<CategoryData?>
+    private val _categories: MutableStateFlow<List<CategoryEntity>> = MutableStateFlow(emptyList())
+    override val categories: StateFlow<List<CategoryEntity>>
         get() = _categories
 
     init {
@@ -42,17 +43,20 @@ class MainActivityViewModelImpl @Inject constructor(
             }
         }
         viewModelScope.launch(Dispatchers.IO) {
+            categoryRepo.getFromDatabase().stateIn(viewModelScope).collect {
+                _categories.value = it
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
             categoryRepo.execute(object : BaseRepo.Callback<CategoryResponse> {
-                override fun onSuccess(data: CategoryResponse) {
-                    _categories.value = data.data
-                }
+                override fun onSuccess(data: CategoryResponse) {}
 
                 override fun onError(error: Throwable) {
-                    _categories.value = null
+                    error.printStackTrace()
                 }
 
                 override fun onRelease() {}
-            })
+            }).launchIn(viewModelScope)
         }
     }
 }

@@ -30,7 +30,9 @@ class GetUserRepo @Inject constructor(
             userDao.getAllUsers().collect {
                 val user = it.firstOrNull()
                 if (user != null) {
-                    launch { this@callbackFlow.send(user) }
+                    launch {
+                        this@callbackFlow.send(user)
+                    }
                 }
             }
         }

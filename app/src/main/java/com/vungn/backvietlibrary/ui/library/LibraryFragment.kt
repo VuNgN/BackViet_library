@@ -1,47 +1,43 @@
 package com.vungn.backvietlibrary.ui.library
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.vungn.backvietlibrary.databinding.FragmentLibraryBinding
 import com.vungn.backvietlibrary.ui.activity.main.MainActivity
+import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.library.adapter.ViewPagerAdapter
-import com.vungn.backvietlibrary.util.data.Category
+import com.vungn.backvietlibrary.ui.library.contract.impl.LibraryViewModelImpl
+import kotlinx.coroutines.launch
 
-class LibraryFragment : Fragment() {
-    private lateinit var binding: FragmentLibraryBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLibraryBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
-        return binding.root
+class LibraryFragment : FragmentBase<FragmentLibraryBinding, LibraryViewModelImpl>() {
+    override fun getViewBinding(): FragmentLibraryBinding {
+        return FragmentLibraryBinding.inflate(layoutInflater)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setupUi()
-        setupListener()
+    override fun getViewModelClass(): Class<LibraryViewModelImpl> {
+        return LibraryViewModelImpl::class.java
     }
 
-    private fun setupListener() {}
-
-    private fun setupUi() {
+    override fun setupListener() {}
+    override fun setupViews() {
         (requireActivity() as MainActivity).apply {
             setTopBarTitle("Library")
-            setupTabLayout(setupListener = ::setupTabListener)
+            setupTabLayoutListener(setupListener = ::setupTabListener)
         }
         val adapter =
             ViewPagerAdapter(requireActivity().supportFragmentManager, requireActivity().lifecycle)
-        adapter.size = Category.entries.size
-        binding.viewPager2.adapter = adapter
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.categories.collect { categories ->
+                    adapter.categories = categories
+                    binding.viewPager2.adapter = adapter
+                }
+            }
+        }
     }
 
     private fun setupTabListener(tabLayout: TabLayout) {

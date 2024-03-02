@@ -8,7 +8,6 @@ import com.vungn.backvietlibrary.model.service.UserService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class GetCategoriesRepo @Inject constructor(
     override val call: Call<CategoryResponse>
         get() = service.getCategories()
 
-    override fun getFromDatabase(): Flow<List<CategoryEntity>> = flow { }
+    override fun getFromDatabase(): Flow<List<CategoryEntity>> = categoryDao.getAllCategories()
 
     override fun CategoryResponse.toEntity(): List<CategoryEntity> {
         val categories = this.data.items

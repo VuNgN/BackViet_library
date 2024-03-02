@@ -10,7 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -25,7 +27,6 @@ import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.main.contract.MainActivityViewModel
 import com.vungn.backvietlibrary.ui.activity.main.contract.impl.MainActivityViewModelImpl
 import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
-import com.vungn.backvietlibrary.util.data.Category
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -75,11 +76,28 @@ class MainActivity : AppCompatActivity() {
     private fun setupUI() {
         setupTopBar()
         setupBottomBar()
-        repeat(Category.entries.size) {
-            binding.tabLayout.addTab(
-                binding.tabLayout.newTab().setIcon(Category.entries[it].resource)
-                    .setText(Category.entries[it].title)
-            )
+        setupTabLayout()
+    }
+
+    private fun setupTabLayout() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.categories.collect { categories ->
+                    categories.forEachIndexed { index, category ->
+                        val currentTab = binding.tabLayout.getTabAt(index)
+                        if (currentTab == null) {
+                            binding.tabLayout.addTab(
+                                binding.tabLayout.newTab().setIcon(R.drawable.round_menu_book_24)
+                                    .setText(category.name)
+                            )
+                        } else {
+                            if (currentTab.text != category.name) {
+                                currentTab.text = category.name
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -124,7 +142,7 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.title = title
     }
 
-    fun setupTabLayout(setupListener: (TabLayout) -> Unit) {
+    fun setupTabLayoutListener(setupListener: (TabLayout) -> Unit) {
         setupListener(binding.tabLayout)
     }
 
