@@ -6,6 +6,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentLibraryBinding
 import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
@@ -25,7 +26,7 @@ class LibraryFragment : FragmentBase<FragmentLibraryBinding, LibraryViewModelImp
     override fun setupListener() {}
     override fun setupViews() {
         (requireActivity() as MainActivity).apply {
-            setTopBarTitle("Library")
+            setTopBarTitle(requireContext().resources.getString(R.string.categories))
             setupTabLayoutListener(setupListener = ::setupTabListener)
         }
         val adapter =

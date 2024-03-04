@@ -7,6 +7,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentNewAndHotBinding
 import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
@@ -38,7 +39,7 @@ class NewAndHotFragment : FragmentBase<FragmentNewAndHotBinding, NewAndHotViewMo
     }
 
     override fun setupViews() {
-        (requireActivity() as MainActivity).setTopBarTitle("New & Hot")
+        (requireActivity() as MainActivity).setTopBarTitle(requireContext().resources.getString(R.string.new_and_hot))
         adapter = RecycleViewAdapter(this.requireContext())
         binding.recycleView.addItemDecoration(MaterialDividerItemDecoration(
             requireContext(), DividerItemDecoration.VERTICAL
