@@ -1,11 +1,9 @@
 package com.vungn.backvietlibrary.ui.newandhot
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
@@ -13,39 +11,38 @@ import com.vungn.backvietlibrary.databinding.FragmentNewAndHotBinding
 import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.main.MainActivity
+import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.newandhot.adapter.RecycleViewAdapter
+import com.vungn.backvietlibrary.ui.newandhot.contract.impl.NewAndHotViewModelImpl
 import com.vungn.backvietlibrary.util.listener.OnItemClick
+import kotlinx.coroutines.launch
 
 
-class NewAndHotFragment : Fragment() {
-    private lateinit var binding: FragmentNewAndHotBinding
+class NewAndHotFragment : FragmentBase<FragmentNewAndHotBinding, NewAndHotViewModelImpl>() {
+    private lateinit var adapter: RecycleViewAdapter
+    override fun getViewBinding(): FragmentNewAndHotBinding =
+        FragmentNewAndHotBinding.inflate(layoutInflater)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentNewAndHotBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
-        return binding.root
+    override fun getViewModelClass(): Class<NewAndHotViewModelImpl> =
+        NewAndHotViewModelImpl::class.java
+
+    override fun setupListener() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.books.collect {
+                    adapter.data = it
+                    adapter.notifyItemRangeChanged(0, it.size)
+                }
+            }
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupUi()
-        setupListener()
-    }
-
-    private fun setupListener() {
-    }
-
-    private fun setupUi() {
+    override fun setupViews() {
         (requireActivity() as MainActivity).setTopBarTitle("New & Hot")
-        val adapter = RecycleViewAdapter(this.requireContext())
-//        adapter.data = bookResponses
-        binding.recycleView.addItemDecoration(
-            MaterialDividerItemDecoration(
-                requireContext(),
-                DividerItemDecoration.VERTICAL
-            ).also { it.isLastItemDecorated = false }
-        )
+        adapter = RecycleViewAdapter(this.requireContext())
+        binding.recycleView.addItemDecoration(MaterialDividerItemDecoration(
+            requireContext(), DividerItemDecoration.VERTICAL
+        ).also { it.isLastItemDecorated = false })
         adapter.onItemClick = gotoBookResponse
         binding.recycleView.adapter = adapter
         binding.recycleView.layoutManager =

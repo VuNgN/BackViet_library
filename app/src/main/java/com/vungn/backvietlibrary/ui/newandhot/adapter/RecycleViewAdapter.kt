@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.vungn.backvietlibrary.databinding.ItemNewAndHotBinding
 import com.vungn.backvietlibrary.db.entity.BookEntity
+import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 class RecycleViewAdapter constructor(private val context: Context) :
@@ -41,14 +43,15 @@ class RecycleViewAdapter constructor(private val context: Context) :
             binding.bookCover.layoutParams.width = targetWidth
         }
 
-        fun setupView(BookEntity: BookEntity) {
-//            Glide.with(binding.root).load(BookEntity.coverImage).into(binding.bookCover)
-            binding.bookName.text = BookEntity.name
-            binding.bookDesc.text = BookEntity.description
+        fun setupView(bookEntity: BookEntity) {
+            Glide.with(binding.root).load(bookEntity.coverImage).error(Common.defaultBookCover)
+                .into(binding.bookCover)
+            binding.bookName.text = bookEntity.name
+            binding.bookDesc.text = bookEntity.description
         }
 
-        fun setupListener(BookEntity: BookEntity) {
-            binding.root.setOnClickListener { _onItemClick?.onItemClick(BookEntity) }
+        fun setupListener(bookEntity: BookEntity) {
+            binding.root.setOnClickListener { _onItemClick?.onItemClick(bookEntity) }
         }
     }
 
