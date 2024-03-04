@@ -18,8 +18,8 @@
     <item
         android:id="@+id/libraryFragment"
         android:enabled="true"
-        android:icon="@drawable/baseline_library_books_24"
-        android:title="@string/library" />
+        android:icon="@drawable/round_category_24"
+        android:title="@string/categories" />
     <item
         android:id="@+id/upgradeFragment"
         android:enabled="true"

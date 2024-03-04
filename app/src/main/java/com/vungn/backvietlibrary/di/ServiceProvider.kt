@@ -3,6 +3,7 @@ package com.vungn.backvietlibrary.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.vungn.backvietlibrary.BuildConfig
+import com.vungn.backvietlibrary.model.service.BookService
 import com.vungn.backvietlibrary.model.service.UserService
 import com.vungn.backvietlibrary.network.NetworkEventInterceptor
 import com.vungn.backvietlibrary.network.SuspendInterceptor
@@ -47,5 +48,11 @@ object ServiceProvider {
     @Singleton
     fun userServiceProvider(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun bookServiceProvider(retrofit: Retrofit): BookService {
+        return retrofit.create(BookService::class.java)
     }
 }

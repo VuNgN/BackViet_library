@@ -9,20 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.vungn.backvietlibrary.databinding.ItemBookCategoryBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 class BookCategoryAdapter(private val context: Context) :
     RecyclerView.Adapter<BookCategoryAdapter.BookCategoryViewHolder>() {
-    private var _data: List<Book> = emptyList()
-    private var _onItemClick: OnItemClick<Book>? = null
-    var data: List<Book>
+    private var _data: List<BookEntity> = emptyList()
+    private var _onItemClick: OnItemClick<BookEntity>? = null
+    var data: List<BookEntity>
         get() = _data
         set(value) {
             _data = value
         }
-    var onItemClick: OnItemClick<Book>?
+    var onItemClick: OnItemClick<BookEntity>?
         get() = _onItemClick
         set(value) {
             _onItemClick = value
@@ -49,7 +49,7 @@ class BookCategoryAdapter(private val context: Context) :
 
         fun setupImage(src: String) {
             val imageView = binding.imageView
-            Glide.with(context).load(src)
+            Glide.with(context).load(src).error(Common.defaultBookCover)
                 .apply(RequestOptions().override(targetWidth, targetHeight)).centerCrop()
                 .into(imageView)
         }

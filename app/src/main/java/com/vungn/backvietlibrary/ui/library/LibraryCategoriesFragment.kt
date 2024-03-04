@@ -1,24 +1,25 @@
 package com.vungn.backvietlibrary.ui.library
 
 import android.content.Intent
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.vungn.backvietlibrary.databinding.FragmentLibraryCategoriesBinding
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.db.entity.CategoryEntity
-import com.vungn.backvietlibrary.model.data.Book
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
+import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.library.adapter.BookCategoryAdapter
+import com.vungn.backvietlibrary.ui.library.contract.impl.LibraryViewModelImpl
 import com.vungn.backvietlibrary.util.GridItemDecoration
-import com.vungn.backvietlibrary.util.books
 import com.vungn.backvietlibrary.util.listener.OnItemClick
+import kotlinx.coroutines.launch
 
-class LibraryCategoriesFragment : Fragment {
-    private lateinit var binding: FragmentLibraryCategoriesBinding
+class LibraryCategoriesFragment :
+    FragmentBase<FragmentLibraryCategoriesBinding, LibraryViewModelImpl> {
     private var category: CategoryEntity?
+    private lateinit var adapter: BookCategoryAdapter
 
     constructor() : this(null)
 
@@ -26,30 +27,34 @@ class LibraryCategoriesFragment : Fragment {
         this.category = category
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLibraryCategoriesBinding.inflate(inflater, container, false)
-        // Inflate the layout for this fragment
-        return binding.root
+    override fun getViewBinding(): FragmentLibraryCategoriesBinding =
+        FragmentLibraryCategoriesBinding.inflate(layoutInflater)
+
+    override fun getViewModelClass(): Class<LibraryViewModelImpl> = LibraryViewModelImpl::class.java
+
+    override fun setupListener() {
+        if (category == null) return
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.getBooksByCategory(category!!).collect {
+                    adapter.data = it
+                    adapter.notifyItemRangeChanged(0, it.size)
+                }
+            }
+        }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupUi()
-    }
-
-    private fun setupUi() {
+    override fun setupViews() {
         binding.title.text = category?.name
-        val adapter = BookCategoryAdapter(requireContext())
-        adapter.data = books
-        adapter.onItemClick = gotoBook
+        adapter = BookCategoryAdapter(requireActivity())
+        adapter.onItemClick = gotoBookResponse
         binding.recycleView.adapter = adapter
         binding.recycleView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recycleView.addItemDecoration(GridItemDecoration(50, 2, true))
     }
 
-    private val gotoBook = object : OnItemClick<Book> {
-        override fun onItemClick(value: Book) {
+    private val gotoBookResponse = object : OnItemClick<BookEntity> {
+        override fun onItemClick(value: BookEntity) {
             val intent = Intent(requireContext(), BookActivity::class.java)
             intent.putExtra(BookActivity.KEY_BUNDLE_BOOK, value)
             startActivity(intent)

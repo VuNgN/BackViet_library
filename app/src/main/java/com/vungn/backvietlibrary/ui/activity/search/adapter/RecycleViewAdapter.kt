@@ -9,19 +9,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.vungn.backvietlibrary.databinding.ItemSearchBookBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 class RecycleViewAdapter(private val context: Context) :
     RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder>() {
-    private var _data: MutableList<Book> = mutableListOf()
-    private var _onItemClick: OnItemClick<Book>? = null
-    var data: List<Book>
+    private var _data: MutableList<BookEntity> = mutableListOf()
+    private var _onItemClick: OnItemClick<BookEntity>? = null
+    var data: List<BookEntity>
         get() = _data
         set(value) {
             _data = value.toMutableList()
         }
-    var onItemClick: OnItemClick<Book>?
+    var onItemClick: OnItemClick<BookEntity>?
         get() = _onItemClick
         set(value) {
             _onItemClick = value
@@ -29,7 +29,7 @@ class RecycleViewAdapter(private val context: Context) :
 
     inner class MyViewHolder(private val binding: ItemSearchBookBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun setupUi(book: Book) {
+        fun setupUi(bookEntity: BookEntity) {
             val windowManager: WindowManager =
                 context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val size = Point()
@@ -37,9 +37,9 @@ class RecycleViewAdapter(private val context: Context) :
             val width = size.x
             val targetWidth = width / 6
             val targetHeight = targetWidth / 3 * 4
-            binding.title.text = book.name
-            binding.author.text = book.author
-            Glide.with(binding.root).load(book.coverImage)
+            binding.title.text = bookEntity.name
+            binding.author.text = bookEntity.author
+            Glide.with(binding.root).load(bookEntity.coverImage)
                 .apply(RequestOptions().override(targetWidth, targetHeight)).centerCrop()
                 .into(binding.bookCover)
         }

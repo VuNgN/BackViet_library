@@ -1,14 +1,10 @@
-package com.vungn.backvietlibrary.db.entity
+package com.vungn.backvietlibrary.model.data
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
-@Entity(tableName = "book")
 @Parcelize
-data class BookEntity(
-    @PrimaryKey
+data class BookItem(
     val id: String,
     val name: String,
     val vietnameseName: String?,
@@ -41,6 +37,5 @@ data class BookEntity(
     val viewNumber: Int?,
     val borrowNumber: Int?,
     val canBorrow: Boolean?,
-    val coverImage: String?,
-    val author: String?,
+    val medias: List<BookMedia>?
 ) : Parcelable

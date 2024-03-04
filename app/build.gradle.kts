@@ -48,6 +48,9 @@ android {
 }
 
 dependencies {
+    // Worker
+    implementation(libs.worker)
+
     // Room
     implementation(libs.room)
     ksp(libs.room.compiler)

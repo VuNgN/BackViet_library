@@ -25,7 +25,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentBookOverviewBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity.Companion.KEY_BUNDLE_BOOK
 import com.vungn.backvietlibrary.util.extension.startAlphaAnimation
@@ -34,7 +34,7 @@ import kotlin.math.abs
 
 class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     private lateinit var binding: FragmentBookOverviewBinding
-    private var book: Book? = null
+    private var bookEntity: BookEntity? = null
     private var mIsTheMenuSmallVisible = false
     private var mIsTheMenuLargeVisible = true
 
@@ -54,8 +54,8 @@ class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val bundle = this.arguments
-        book = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bundle?.getParcelable(KEY_BUNDLE_BOOK, Book::class.java)
+        bookEntity = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bundle?.getParcelable(KEY_BUNDLE_BOOK, BookEntity::class.java)
         } else {
             bundle?.getParcelable(KEY_BUNDLE_BOOK)
         }
@@ -81,9 +81,9 @@ class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         loadBookCover()
         binding.apply {
             appBarLayout.addOnOffsetChangedListener(this@BookOverviewFragment)
-            titleLarge.text = book?.name
-            titleSmall.text = book?.name
-            description.text = book?.description
+            titleLarge.text = bookEntity?.name
+            titleSmall.text = bookEntity?.name
+            description.text = bookEntity?.description
         }
     }
 
@@ -96,7 +96,7 @@ class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         val targetWidth = width / 3
         val targetHeight = targetWidth / 3 * 4
 
-        Glide.with(this).asBitmap().load(book?.coverImage)
+        Glide.with(this).asBitmap().load(bookEntity?.coverImage)
             .apply(RequestOptions().override(targetWidth, targetHeight)).centerCrop()
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {

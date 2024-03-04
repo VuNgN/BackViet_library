@@ -3,8 +3,11 @@ package com.vungn.backvietlibrary.ui.activity.main.contract.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vungn.backvietlibrary.db.entity.CategoryEntity
-import com.vungn.backvietlibrary.model.data.CategoryResponse
+import com.vungn.backvietlibrary.model.data.BookData
+import com.vungn.backvietlibrary.model.data.CategoryData
+import com.vungn.backvietlibrary.model.data.Response
 import com.vungn.backvietlibrary.model.repo.BaseRepo
+import com.vungn.backvietlibrary.model.repo.Get10EarliestPublishedBooks
 import com.vungn.backvietlibrary.model.repo.GetCategoriesRepo
 import com.vungn.backvietlibrary.model.repo.GetUserRepo
 import com.vungn.backvietlibrary.network.NetworkEvent
@@ -23,7 +26,8 @@ import javax.inject.Inject
 class MainActivityViewModelImpl @Inject constructor(
     networkEvent: NetworkEvent,
     private val categoryRepo: GetCategoriesRepo,
-    private val userRepo: GetUserRepo
+    private val userRepo: GetUserRepo,
+    private val get10EarliestPublishedBooks: Get10EarliestPublishedBooks
 ) : ViewModel(),
     MainActivityViewModel {
     private val _networkState: StateFlow<NetworkState> = networkEvent.observableNetworkState
@@ -48,8 +52,19 @@ class MainActivityViewModelImpl @Inject constructor(
             }
         }
         viewModelScope.launch(Dispatchers.IO) {
-            categoryRepo.execute(object : BaseRepo.Callback<CategoryResponse> {
-                override fun onSuccess(data: CategoryResponse) {}
+            categoryRepo.execute(object : BaseRepo.Callback<Response<CategoryData>> {
+                override fun onSuccess(data: Response<CategoryData>) {}
+
+                override fun onError(error: Throwable) {
+                    error.printStackTrace()
+                }
+
+                override fun onRelease() {}
+            }).launchIn(viewModelScope)
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            get10EarliestPublishedBooks.execute(object : BaseRepo.Callback<Response<BookData>> {
+                override fun onSuccess(data: Response<BookData>) {}
 
                 override fun onError(error: Throwable) {
                     error.printStackTrace()

@@ -3,7 +3,8 @@ package com.vungn.backvietlibrary.model.repo
 import com.vungn.backvietlibrary.db.dao.UserDao
 import com.vungn.backvietlibrary.db.entity.UserEntity
 import com.vungn.backvietlibrary.di.CoroutineScopeIO
-import com.vungn.backvietlibrary.model.data.UserResponse
+import com.vungn.backvietlibrary.model.data.Response
+import com.vungn.backvietlibrary.model.data.UserValue
 import com.vungn.backvietlibrary.model.service.UserService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +22,8 @@ class GetUserRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val userService: UserService,
     private val userDao: UserDao
-) : BaseRepo<UserResponse, UserEntity>() {
-    override val call: Call<UserResponse>
+) : BaseRepo<Response<UserValue>, UserEntity>() {
+    override val call: Call<Response<UserValue>>
         get() = userService.getUser()
 
     override fun getFromDatabase(): Flow<UserEntity> = callbackFlow {
@@ -39,7 +40,7 @@ class GetUserRepo @Inject constructor(
         awaitClose {}
     }
 
-    override fun UserResponse.toEntity(): UserEntity {
+    override fun Response<UserValue>.toEntity(): UserEntity {
         val calendar = Calendar.getInstance()
         this.data.run {
             return UserEntity(
@@ -55,7 +56,7 @@ class GetUserRepo @Inject constructor(
         }
     }
 
-    override suspend fun saveToDatabase(data: UserResponse) {
+    override suspend fun saveToDatabase(data: Response<UserValue>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
             val user = userDao.getAllUsers().stateIn(coroutineScopeIO).firstOrNull()
             if (user?.isEmpty() == true) {

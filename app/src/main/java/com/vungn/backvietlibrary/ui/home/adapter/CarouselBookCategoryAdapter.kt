@@ -7,20 +7,20 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.vungn.backvietlibrary.databinding.ItemCarouselBookCategoryBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 class CarouselBookCategoryAdapter(private val context: Context) :
     Adapter<CarouselBookCategoryAdapter.CarouselViewHolder>() {
-    private var _data: List<Book> = emptyList()
-    private var _onItemClick: OnItemClick<Book>? = null
-    var data: List<Book>
+    private var _data: List<BookEntity> = emptyList()
+    private var _onItemClick: OnItemClick<BookEntity>? = null
+    var data: List<BookEntity>
         get() = _data
         set(value) {
             _data = value
         }
-    var onItemClick: OnItemClick<Book>?
+    var onItemClick: OnItemClick<BookEntity>?
         get() = _onItemClick
         set(value) {
             _onItemClick = value
@@ -29,7 +29,8 @@ class CarouselBookCategoryAdapter(private val context: Context) :
     inner class CarouselViewHolder(private val binding: ItemCarouselBookCategoryBinding) :
         ViewHolder(binding.root) {
         fun loadImage(url: String) {
-            Glide.with(context).load(url).into(binding.carouselImageView)
+            Glide.with(context).load(url).error(Common.defaultBookCover)
+                .into(binding.carouselImageView)
         }
     }
 

@@ -24,6 +24,7 @@ playServicesBasement = "18.3.0"
 circleImageView = "3.1.0"
 okhttp-logging-interceptor = "4.12.0"
 room_version = "2.6.1"
+worker = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-i
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room_version" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_version" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room_version" }
+worker = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "worker" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.vungn.backvietlibrary.databinding.FragmentNewAndHotBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 import com.vungn.backvietlibrary.ui.newandhot.adapter.RecycleViewAdapter
-import com.vungn.backvietlibrary.util.books
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 
@@ -40,21 +39,21 @@ class NewAndHotFragment : Fragment() {
     private fun setupUi() {
         (requireActivity() as MainActivity).setTopBarTitle("New & Hot")
         val adapter = RecycleViewAdapter(this.requireContext())
-        adapter.data = books
+//        adapter.data = bookResponses
         binding.recycleView.addItemDecoration(
             MaterialDividerItemDecoration(
                 requireContext(),
                 DividerItemDecoration.VERTICAL
             ).also { it.isLastItemDecorated = false }
         )
-        adapter.onItemClick = gotoBook
+        adapter.onItemClick = gotoBookResponse
         binding.recycleView.adapter = adapter
         binding.recycleView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 
-    private val gotoBook = object : OnItemClick<Book> {
-        override fun onItemClick(value: Book) {
+    private val gotoBookResponse = object : OnItemClick<BookEntity> {
+        override fun onItemClick(value: BookEntity) {
             val intent = Intent(requireContext(), BookActivity::class.java)
             intent.putExtra(BookActivity.KEY_BUNDLE_BOOK, value)
             startActivity(intent)

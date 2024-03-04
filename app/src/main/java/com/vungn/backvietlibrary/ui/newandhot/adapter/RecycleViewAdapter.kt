@@ -6,21 +6,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.vungn.backvietlibrary.databinding.ItemNewAndHotBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
 class RecycleViewAdapter constructor(private val context: Context) :
     RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder>() {
-    private var _data: List<Book> = emptyList()
-    private var _onItemClick: OnItemClick<Book>? = null
-    var data: List<Book>
+    private var _data: List<BookEntity> = emptyList()
+    private var _onItemClick: OnItemClick<BookEntity>? = null
+    var data: List<BookEntity>
         get() = _data
         set(value) {
             _data = value
         }
-    var onItemClick: OnItemClick<Book>?
+    var onItemClick: OnItemClick<BookEntity>?
         get() = _onItemClick
         set(value) {
             _onItemClick = value
@@ -42,14 +41,14 @@ class RecycleViewAdapter constructor(private val context: Context) :
             binding.bookCover.layoutParams.width = targetWidth
         }
 
-        fun setupView(book: Book) {
-            Glide.with(binding.root).load(book.coverImage).into(binding.bookCover)
-            binding.bookName.text = book.name
-            binding.bookDesc.text = book.description
+        fun setupView(BookEntity: BookEntity) {
+//            Glide.with(binding.root).load(BookEntity.coverImage).into(binding.bookCover)
+            binding.bookName.text = BookEntity.name
+            binding.bookDesc.text = BookEntity.description
         }
 
-        fun setupListener(book: Book) {
-            binding.root.setOnClickListener { _onItemClick?.onItemClick(book) }
+        fun setupListener(BookEntity: BookEntity) {
+            binding.root.setOnClickListener { _onItemClick?.onItemClick(BookEntity) }
         }
     }
 

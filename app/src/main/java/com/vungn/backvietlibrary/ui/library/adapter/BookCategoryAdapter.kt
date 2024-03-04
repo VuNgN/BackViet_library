@@ -1,5 +1,6 @@
 package com.vungn.backvietlibrary.ui.library.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Point
 import android.view.LayoutInflater
@@ -9,20 +10,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.vungn.backvietlibrary.databinding.ItemBooksOfLibraryCategoryBinding
-import com.vungn.backvietlibrary.model.data.Book
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 
-class BookCategoryAdapter(private val context: Context) :
+
+class BookCategoryAdapter(private val activity: Activity) :
     RecyclerView.Adapter<BookCategoryAdapter.BookCategoryViewHolder>() {
-    private var _data: List<Book> = emptyList()
-    private var _onItemClick: OnItemClick<Book>? = null
-    var data: List<Book>
+    private var _data: List<BookEntity> = emptyList()
+    private var _onItemClick: OnItemClick<BookEntity>? = null
+    var data: List<BookEntity>
         get() = _data
         set(value) {
             _data = value
         }
-    var onItemClick: OnItemClick<Book>?
+    var onItemClick: OnItemClick<BookEntity>?
         get() = _onItemClick
         set(value) {
             _onItemClick = value
@@ -35,7 +37,7 @@ class BookCategoryAdapter(private val context: Context) :
 
         init {
             val windowManager: WindowManager =
-                context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val size = Point()
             windowManager.defaultDisplay.getRealSize(size)
             val width = size.x
@@ -46,16 +48,16 @@ class BookCategoryAdapter(private val context: Context) :
             binding.cardView.layoutParams.height = targetHeight
         }
 
-        fun setupUi(book: Book) {
+        fun setupUi(bookEntity: BookEntity) {
             binding.apply {
-                title.text = book.name
-                sub.text = book.description
+                title.text = bookEntity.name
+                sub.text = bookEntity.description
             }
         }
 
         fun setupImage(src: String) {
             val imageView = binding.imageView
-            Glide.with(context).load(src)
+            Glide.with(activity.applicationContext).load(src)
                 .apply(RequestOptions().override(targetWidth, targetHeight)).centerCrop()
                 .into(imageView)
         }

@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.vungn.backvietlibrary.db.entity.UserEntity
-import com.vungn.backvietlibrary.model.data.UserResponse
+import com.vungn.backvietlibrary.model.data.Response
+import com.vungn.backvietlibrary.model.data.UserValue
 import com.vungn.backvietlibrary.model.repo.BaseRepo
 import com.vungn.backvietlibrary.model.repo.GetUserRepo
 import com.vungn.backvietlibrary.ui.account.contract.AccountViewModel
@@ -35,8 +36,8 @@ class AccountViewModelImpl @Inject constructor(
 
     override fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            userRepo.execute(object : BaseRepo.Callback<UserResponse> {
-                override fun onSuccess(data: UserResponse) {
+            userRepo.execute(object : BaseRepo.Callback<Response<UserValue>> {
+                override fun onSuccess(data: Response<UserValue>) {
                     Log.d(TAG, "onSuccess: ${gson.toJson(data)}")
 //                    _user.value = data.value
                     _callApiState.value = CallApiState.SUCCESS

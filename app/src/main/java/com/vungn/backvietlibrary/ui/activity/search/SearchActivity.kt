@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.ActivitySearchBinding
 import com.vungn.backvietlibrary.ui.activity.search.adapter.RecycleViewAdapter
-import com.vungn.backvietlibrary.util.books
 import com.vungn.backvietlibrary.util.extension.focus
 
 class SearchActivity : AppCompatActivity() {
@@ -32,7 +31,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setupUi() {
         val adapter = RecycleViewAdapter(this)
-        adapter.data = books
+//        adapter.data = bookResponses
         binding.apply {
             editText.focus()
             recycleView.adapter = adapter
