@@ -22,7 +22,7 @@ class GetUserRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val userService: UserService,
     private val userDao: UserDao
-) : BaseRepo<Response<UserValue>, UserEntity>() {
+) : BaseRepo<Response<UserValue>, UserEntity?>() {
     override val call: Call<Response<UserValue>>
         get() = userService.getUser()
 
@@ -40,9 +40,9 @@ class GetUserRepo @Inject constructor(
         awaitClose {}
     }
 
-    override fun Response<UserValue>.toEntity(): UserEntity {
+    override fun Response<UserValue>.toEntity(): UserEntity? {
         val calendar = Calendar.getInstance()
-        this.data.run {
+        this.data?.run {
             return UserEntity(
                 calendar.timeInMillis,
                 id,
@@ -53,16 +53,17 @@ class GetUserRepo @Inject constructor(
                 identityNo,
                 isLock
             )
-        }
+        } ?: return null
     }
 
     override suspend fun saveToDatabase(data: Response<UserValue>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
             val user = userDao.getAllUsers().stateIn(coroutineScopeIO).firstOrNull()
+            val entity = data.toEntity() ?: return@launch
             if (user?.isEmpty() == true) {
-                userDao.insertUsers(data.toEntity())
+                userDao.insertUsers(entity)
             } else {
-                userDao.updateUsers(data.toEntity())
+                userDao.updateUsers(entity)
             }
         }
     }

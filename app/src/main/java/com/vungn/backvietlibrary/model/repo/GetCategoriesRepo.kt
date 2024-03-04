@@ -18,7 +18,7 @@ class GetCategoriesRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val service: UserService,
     private val categoryDao: CategoryDao
-) : BaseRepo<Response<CategoryData>, List<CategoryEntity>>() {
+) : BaseRepo<Response<CategoryData>, List<CategoryEntity>?>() {
     override val call: Call<Response<CategoryData>>
         get() {
             val xQueryHeader = XQueryHeader(
@@ -33,9 +33,9 @@ class GetCategoriesRepo @Inject constructor(
 
     override fun getFromDatabase(): Flow<List<CategoryEntity>> = categoryDao.getAllCategories()
 
-    override fun Response<CategoryData>.toEntity(): List<CategoryEntity> {
-        val categories = this.data.items
-        val entities = categories.map {
+    override fun Response<CategoryData>.toEntity(): List<CategoryEntity>? {
+        val categories = this.data?.items
+        val entities = categories?.map {
             CategoryEntity(
                 id = it.id,
                 name = it.name,
@@ -47,7 +47,9 @@ class GetCategoriesRepo @Inject constructor(
     override suspend fun saveToDatabase(data: Response<CategoryData>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
             val entities = data.toEntity()
-            categoryDao.insertAll(entities)
+            if (entities != null){
+                categoryDao.insertAll(entities)
+            }
         }
     }
 }

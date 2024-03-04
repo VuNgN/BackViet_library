@@ -18,7 +18,7 @@ class GetAllBooksRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val service: BookService,
     private val bookDao: BookDao
-) : BaseRepo<Response<BookData>, List<BookEntity>>() {
+) : BaseRepo<Response<BookData>, List<BookEntity>?>() {
     override val call: Call<Response<BookData>>
         get() {
             val xQuery = XQueryHeader(
@@ -33,9 +33,9 @@ class GetAllBooksRepo @Inject constructor(
 
     override fun getFromDatabase(): Flow<List<BookEntity>> = bookDao.getAllBooks()
 
-    override fun Response<BookData>.toEntity(): List<BookEntity> {
-        val books = this.data.items
-        return books.map { book ->
+    override fun Response<BookData>.toEntity(): List<BookEntity>? {
+        val books = this.data?.items
+        return books?.map { book ->
             val coverImage = book.medias?.find { it.isMain }?.src
             BookEntity(
                 id = book.id,
@@ -78,7 +78,10 @@ class GetAllBooksRepo @Inject constructor(
 
     override suspend fun saveToDatabase(data: Response<BookData>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
-            bookDao.insert(data.toEntity())
+            val entities = data.toEntity()
+            if (entities != null) {
+                bookDao.insert(entities)
+            }
         }
     }
 }

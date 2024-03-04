@@ -50,6 +50,8 @@ android {
 dependencies {
     // Worker
     implementation(libs.worker)
+    implementation(libs.hilt.worker)
+    ksp(libs.hilt.worker.compiler)
 
     // Room
     implementation(libs.room)

@@ -20,7 +20,7 @@ class EditProfileRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val userService: UserService,
     private val userDao: UserDao
-) : BaseRepo<Response<UserValue>, UserEntity>() {
+) : BaseRepo<Response<UserValue>, UserEntity?>() {
     private lateinit var _userRequest: UserValue
     override val call: Call<Response<UserValue>>
         get() = userService.updateUser(Request(_userRequest))
@@ -32,18 +32,21 @@ class EditProfileRepo @Inject constructor(
 
     override fun getFromDatabase(): Flow<UserEntity> = userDao.getUserById(_userRequest.id)
 
-    override fun Response<UserValue>.toEntity(): UserEntity {
+    override fun Response<UserValue>.toEntity(): UserEntity? {
         val calendar = Calendar.getInstance()
-        this.data.run {
+        this.data?.run {
             return UserEntity(
                 calendar.timeInMillis, id, gender, displayName, address, avatar, identityNo, isLock
             )
-        }
+        } ?: return null
     }
 
     override suspend fun saveToDatabase(data: Response<UserValue>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
-            userDao.updateUsers(data.toEntity())
+            val entity = data.toEntity()
+            if (entity != null) {
+                userDao.updateUsers(entity)
+            }
         }
     }
 }

@@ -20,6 +20,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BackVietLibrary"
         tools:targetApi="31">
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
         <activity
             android:name=".ui.activity.account.AccountActivity"
             android:exported="false" />
