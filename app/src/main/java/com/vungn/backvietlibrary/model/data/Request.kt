@@ -4,6 +4,6 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LoginRequest(
-    val model: LoginModel
+data class Request<T : Parcelable>(
+    val model: T
 ) : Parcelable

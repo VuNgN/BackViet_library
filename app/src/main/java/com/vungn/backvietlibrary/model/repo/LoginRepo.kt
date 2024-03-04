@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.edit
 import com.vungn.backvietlibrary.di.CoroutineScopeIO
 import com.vungn.backvietlibrary.model.data.AuthResponse
 import com.vungn.backvietlibrary.model.data.LoginModel
-import com.vungn.backvietlibrary.model.data.LoginRequest
+import com.vungn.backvietlibrary.model.data.Request
 import com.vungn.backvietlibrary.model.service.UserService
 import com.vungn.backvietlibrary.util.key.PreferenceKey
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +27,7 @@ class LoginRepo @Inject constructor(
     private lateinit var password: String
     override val call: Call<AuthResponse>
         get() = userService.singIn(
-            LoginRequest(LoginModel(username, password))
+            Request(LoginModel(username, password))
         )
 
     suspend fun login(username: String, password: String, callback: Callback<AuthResponse>) {

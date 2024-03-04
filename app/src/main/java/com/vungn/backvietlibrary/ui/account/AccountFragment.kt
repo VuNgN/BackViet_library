@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
+import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentAccountBinding
 import com.vungn.backvietlibrary.ui.account.contract.impl.AccountViewModelImpl
 import com.vungn.backvietlibrary.ui.base.FragmentBase
@@ -50,15 +51,31 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
         binding.mainToolbar.setNavigationOnClickListener {
             requireActivity().finish()
         }
+        binding.mainButtonEditProfile.setOnClickListener {
+            navController.navigate(R.id.action_accountFragment_to_editProfileFragment)
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.callApiState.collect { state ->
                     when (state) {
-                        CallApiState.LOADING -> {}
+                        CallApiState.LOADING -> {
+                            binding.mainButtonEditProfile.isEnabled = false
+                            binding.mainButtonLogout.isEnabled = false
+                        }
 
-                        CallApiState.SUCCESS -> {}
+                        CallApiState.SUCCESS -> {
+                            binding.mainButtonEditProfile.isEnabled = true
+                            binding.mainButtonLogout.isEnabled = true
+                            binding.mainFramelayoutProgress.visibility = View.GONE
+                            binding.mainLinearlayoutLargeTitle.visibility = View.VISIBLE
+                        }
 
-                        CallApiState.ERROR -> {}
+                        CallApiState.ERROR -> {
+                            binding.mainFramelayoutProgress.visibility = View.GONE
+                            binding.mainLinearlayoutLargeTitle.visibility = View.VISIBLE
+                        }
+
+                        CallApiState.NONE -> {}
                     }
                 }
             }
