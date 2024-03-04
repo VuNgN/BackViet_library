@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,7 +16,6 @@ import android.view.WindowManager
 import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
@@ -28,8 +26,10 @@ import com.vungn.backvietlibrary.databinding.FragmentBookOverviewBinding
 import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity.Companion.KEY_BUNDLE_BOOK
+import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.extension.startAlphaAnimation
 import com.vungn.backvietlibrary.util.extension.startBackgroundAnimation
+import com.vungn.backvietlibrary.util.extension.themeColor
 import kotlin.math.abs
 
 class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
@@ -96,30 +96,32 @@ class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         val targetWidth = width / 3
         val targetHeight = targetWidth / 3 * 4
 
-        Glide.with(this).asBitmap().load(bookEntity?.coverImage)
+        Glide.with(this).asBitmap().load(bookEntity?.coverImage ?: Common.defaultBookCover)
             .apply(RequestOptions().override(targetWidth, targetHeight)).centerCrop()
             .into(object : CustomTarget<Bitmap>() {
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                     binding.bookCover.setImageBitmap(resource)
-                    Palette.Builder(resource).generate {
-                        it?.let { palette ->
-                            dominantColor = palette.getDominantColor(Color.TRANSPARENT)
-                            vibrantColor = palette.getVibrantColor(Color.TRANSPARENT)
-                            val mutedColor = palette.getMutedColor(Color.TRANSPARENT)
-                            val gradient = GradientDrawable(
-                                GradientDrawable.Orientation.TOP_BOTTOM,
-                                intArrayOf(vibrantColor, dominantColor)
-                            )
-                            binding.root.background = gradient
-                            binding.readBookButton.setBackgroundColor(mutedColor)
-                            requireActivity().window.statusBarColor = vibrantColor
-                        }
-                    }
+//                    Palette.Builder(resource).generate {
+//                        it?.let { palette ->
+//                            dominantColor = palette.getDominantColor(Color.TRANSPARENT)
+//                            vibrantColor = palette.getVibrantColor(Color.TRANSPARENT)
+//                            val mutedColor = palette.getMutedColor(Color.TRANSPARENT)
+//                            val gradient = GradientDrawable(
+//                                GradientDrawable.Orientation.TOP_BOTTOM,
+//                                intArrayOf(vibrantColor, dominantColor)
+//                            )
+//                            binding.root.setBackgroundColor(mutedColor)
+////                            binding.readBookButton.setBackgroundColor(mutedColor)
+//                            requireActivity().window.statusBarColor = dominantColor
+//                        }
+//                    }
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
             })
+        requireActivity().window.statusBarColor =
+            requireContext().themeColor(com.google.android.material.R.attr.colorPrimaryContainer)
     }
 
 

@@ -23,14 +23,14 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://test.thuvien247.vn/\"")
+            buildConfigField("String", "BASE_URL", "\"https://thuvien.iptech.edu.vn/\"")
         }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"https://test.thuvien247.vn/\"")
+            buildConfigField("String", "BASE_URL", "\"https://thuvien.iptech.edu.vn/\"")
         }
     }
     compileOptions {

@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?colorPrimaryContainer"
     tools:context=".ui.bookoverview.BookOverviewFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -29,12 +30,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:minHeight="?attr/actionBarSize"
-                app:iconTint="#fff"
+                app:iconTint="?colorOnSurface"
                 app:layout_collapseMode="pin"
                 app:menu="@menu/menu_top_app_bar_book"
                 app:navigationIcon="@drawable/round_arrow_back_ios_new_24"
-                app:navigationIconTint="#fff"
-                app:theme="@style/ThemeOverlay.Material3.Dark"
+                app:navigationIconTint="?colorOnSurface"
                 app:title="">
 
                 <LinearLayout
@@ -51,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textColor="#fff" />
+                        android:textColor="?colorOnSurface" />
 
                 </LinearLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -86,7 +86,7 @@
                     style="?textAppearanceTitleMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#fff" />
+                    android:textColor="?colorOnSurface" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -102,16 +102,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
                         app:icon="@drawable/round_favorite_border_24"
-                        app:iconTint="#fff" />
+                        app:iconTint="?colorOnSurface" />
 
                     <Button
                         android:id="@+id/read_book_button"
-                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Read"
-                        android:textColor="#fff" />
+                        android:text="Read" />
 
                 </LinearLayout>
 
@@ -129,6 +127,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/about_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="20dp"

@@ -2,8 +2,10 @@ package com.vungn.backvietlibrary.util.extension
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.TypedValue
@@ -11,6 +13,7 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 
 fun View.startAlphaAnimation(duration: Long, visibility: Int) {
@@ -71,4 +74,23 @@ fun Context.isNetworkAvailable(): Boolean {
     val network = connectivityManager.activeNetwork
     val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
     return networkCapabilities != null && networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+}
+
+fun Context.dimensionFromAttribute(attribute: Int): Int {
+    val attributes = obtainStyledAttributes(intArrayOf(attribute))
+    val dimension = attributes.getDimensionPixelSize(0, 0)
+    attributes.recycle()
+    return dimension
+}
+
+@ColorInt
+@SuppressLint("Recycle")
+fun Context.themeColor(
+    @AttrRes themeAttrId: Int
+): Int {
+    return obtainStyledAttributes(
+        intArrayOf(themeAttrId)
+    ).use {
+        it.getColor(0, Color.MAGENTA)
+    }
 }
