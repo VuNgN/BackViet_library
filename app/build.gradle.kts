@@ -1,9 +1,12 @@
+import com.android.build.api.dsl.Packaging
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.navSafeArgs)
     id("kotlin-parcelize")
 }
 
@@ -44,6 +47,14 @@ android {
         viewBinding = true
         dataBinding = true
         buildConfig = true
+    }
+    packagingOptions {
+        resources.excludes.apply {
+            add("META-INF/LICENSE")
+            add("META-INF/*.properties")
+            add("META-INF/AL2.0")
+            add("META-INF/LGPL2.1")
+        }
     }
 }
 
@@ -95,6 +106,7 @@ dependencies {
     implementation(libs.nav.fragment)
     implementation(libs.nav.ui.ktx)
     androidTestImplementation(libs.nav.test)
+//    implementation(libs.nav.safe.args)
 
     // Hilt
     implementation(libs.hilt)

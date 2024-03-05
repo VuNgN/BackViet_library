@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import com.vungn.backvietlibrary.BuildConfig
 
 fun View.startAlphaAnimation(duration: Long, visibility: Int) {
     val alphaAnimation =
@@ -93,4 +94,8 @@ fun Context.themeColor(
     ).use {
         it.getColor(0, Color.MAGENTA)
     }
+}
+
+fun String.toAvatarUrl(): String {
+    return "${BuildConfig.BASE_URL}$this"
 }

@@ -17,10 +17,30 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_accountFragment_to_confirmAvatarFragment"
+            app:destination="@id/confirmAvatarFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="avatarPath"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.vungn.backvietlibrary.ui.editprofile.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/confirmAvatarFragment"
+        android:name="com.vungn.backvietlibrary.ui.confirmavatar.ConfirmAvatarFragment"
+        android:label="fragment_confirm_avatar"
+        tools:layout="@layout/fragment_confirm_avatar">
+        <argument
+            android:name="avatarPath"
+            app:argType="string" />
+    </fragment>
 </navigation>

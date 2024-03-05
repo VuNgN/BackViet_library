@@ -73,7 +73,7 @@
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/spacing_small">
 
-                    <Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize" />
 
@@ -94,7 +94,7 @@
                     android:paddingBottom="@dimen/spacing_small"
                     android:visibility="gone">
 
-                    <Space
+                    <androidx.legacy.widget.Space
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize" />
 
@@ -144,11 +144,18 @@
                 android:orientation="vertical">
 
                 <Button
+                    android:id="@+id/main.button.change.avatar"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thay đổi ảnh đại diện" />
+
+                <Button
                     android:id="@+id/main.button.edit.profile"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Edit profile" />
+                    android:text="Chỉnh sửa thông tin cá nhân" />
 
                 <Button
                     android:id="@+id/main.button.logout"

@@ -27,6 +27,7 @@ import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.main.contract.MainActivityViewModel
 import com.vungn.backvietlibrary.ui.activity.main.contract.impl.MainActivityViewModelImpl
 import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
+import com.vungn.backvietlibrary.util.extension.toAvatarUrl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -120,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbar.menu.getItem(1).setIcon(R.drawable.round_account_circle_24)
                     return@collect
                 }
-                Glide.with(this@MainActivity).asDrawable().load(url).circleCrop()
+                Glide.with(this@MainActivity).asDrawable().load(url.toAvatarUrl()).circleCrop()
                     .into(object :
                         CustomTarget<Drawable>() {
                         override fun onResourceReady(

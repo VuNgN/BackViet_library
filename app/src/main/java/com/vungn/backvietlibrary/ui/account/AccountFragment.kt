@@ -3,6 +3,7 @@ package com.vungn.backvietlibrary.ui.account
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
@@ -18,9 +19,11 @@ import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentAccountBinding
 import com.vungn.backvietlibrary.ui.account.contract.impl.AccountViewModelImpl
 import com.vungn.backvietlibrary.ui.base.FragmentBase
+import com.vungn.backvietlibrary.ui.component.ChangeAvatarBottomSheetFragment
 import com.vungn.backvietlibrary.util.enums.CallApiState
 import com.vungn.backvietlibrary.util.extension.startAlphaAnimation
 import com.vungn.backvietlibrary.util.extension.startBackgroundAnimation
+import com.vungn.backvietlibrary.util.extension.toAvatarUrl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -39,6 +42,7 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
 
     @ColorInt
     private var vibrantColor: Int = Color.TRANSPARENT
+    private lateinit var bottomSheetFragment: ChangeAvatarBottomSheetFragment
     override fun getViewBinding(): FragmentAccountBinding {
         return FragmentAccountBinding.inflate(layoutInflater)
     }
@@ -51,19 +55,43 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
         binding.mainToolbar.setNavigationOnClickListener {
             requireActivity().finish()
         }
+        binding.mainButtonChangeAvatar.setOnClickListener {
+            val fragmentTag = ChangeAvatarBottomSheetFragment.TAG
+            val existingFragment = childFragmentManager.findFragmentByTag(fragmentTag)
+
+            if (existingFragment == null || !existingFragment.isAdded) {
+                bottomSheetFragment.show(childFragmentManager, ChangeAvatarBottomSheetFragment.TAG)
+            }
+        }
         binding.mainButtonEditProfile.setOnClickListener {
             navController.navigate(R.id.action_accountFragment_to_editProfileFragment)
         }
+        bottomSheetFragment.onPhotoPickerListener =
+            object : ChangeAvatarBottomSheetFragment.OnPhotoPickerListener {
+                override fun onPhotoPicked(path: String?) {
+                    Log.d(TAG, "onPhotoPicked: $path")
+                    bottomSheetFragment.dismiss()
+                    if (path != null) {
+                        val action =
+                            AccountFragmentDirections.actionAccountFragmentToConfirmAvatarFragment(
+                                path
+                            )
+                        navController.navigate(action)
+                    }
+                }
+            }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.callApiState.collect { state ->
                     when (state) {
                         CallApiState.LOADING -> {
+                            binding.mainButtonChangeAvatar.isEnabled = false
                             binding.mainButtonEditProfile.isEnabled = false
                             binding.mainButtonLogout.isEnabled = false
                         }
 
                         CallApiState.SUCCESS -> {
+                            binding.mainButtonChangeAvatar.isEnabled = true
                             binding.mainButtonEditProfile.isEnabled = true
                             binding.mainButtonLogout.isEnabled = true
                             binding.mainFramelayoutProgress.visibility = View.GONE
@@ -83,6 +111,7 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
     }
 
     override fun setupViews() {
+        bottomSheetFragment = ChangeAvatarBottomSheetFragment()
         mToolbar = binding.mainToolbar
         mAppBarLayout = binding.mainAppbar
         mSmallTitleContainer = binding.mainLinearlayoutSmallTitle
@@ -94,12 +123,11 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
                 viewModel.user.collect { user ->
                     binding.mainTextviewSmallTitle.text = user?.displayName
                     binding.mainTextviewLargeTitle.text = user?.displayName
-                    Glide.with(requireContext()).asBitmap().load(user?.avatar).circleCrop()
-                        .into(object :
-                            CustomTarget<Bitmap>() {
+                    Glide.with(requireContext()).asBitmap().load(user?.avatar?.toAvatarUrl())
+                        .circleCrop()
+                        .into(object : CustomTarget<Bitmap>() {
                             override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
+                                resource: Bitmap, transition: Transition<in Bitmap>?
                             ) {
                                 binding.mainImageviewLargeAvatar.setImageBitmap(resource)
                                 binding.mainImageviewSmallAvatar.setImageBitmap(resource)
@@ -166,5 +194,6 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
         private const val PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.6f
         private const val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f
         private const val ALPHA_ANIMATIONS_DURATION = 200L
+        private const val TAG = "AccountFragment"
     }
 }
