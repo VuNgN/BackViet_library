@@ -48,6 +48,7 @@ class RecycleViewAdapter constructor(private val context: Context) :
                 .into(binding.bookCover)
             binding.bookName.text = bookEntity.name
             binding.bookDesc.text = bookEntity.description
+            binding.dateTime.text = "Xuất bản năm: ${bookEntity.publishYear}"
         }
 
         fun setupListener(bookEntity: BookEntity) {
