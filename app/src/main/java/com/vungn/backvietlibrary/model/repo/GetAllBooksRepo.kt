@@ -1,9 +1,12 @@
 package com.vungn.backvietlibrary.model.repo
 
 import com.vungn.backvietlibrary.db.dao.BookDao
+import com.vungn.backvietlibrary.db.dao.MediaDao
 import com.vungn.backvietlibrary.db.entity.BookEntity
+import com.vungn.backvietlibrary.db.entity.MediaEntity
 import com.vungn.backvietlibrary.di.CoroutineScopeIO
 import com.vungn.backvietlibrary.model.data.BookData
+import com.vungn.backvietlibrary.model.data.BookMedia
 import com.vungn.backvietlibrary.model.data.Response
 import com.vungn.backvietlibrary.model.service.BookService
 import com.vungn.backvietlibrary.model.service.header.XQueryHeader
@@ -17,7 +20,8 @@ import javax.inject.Inject
 class GetAllBooksRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val service: BookService,
-    private val bookDao: BookDao
+    private val bookDao: BookDao,
+    private val mediaDao: MediaDao
 ) : BaseRepo<Response<BookData>, List<BookEntity>?>() {
     override val call: Call<Response<BookData>>
         get() {
@@ -76,12 +80,33 @@ class GetAllBooksRepo @Inject constructor(
         }
     }
 
+    private fun List<BookMedia>.toEntity(): List<MediaEntity> {
+        return this.map { media ->
+            MediaEntity(
+                id = media.id,
+                bookId = media.bookId,
+                src = media.src,
+                isMain = media.isMain,
+                size = media.size,
+                title = media.title,
+                type = media.type
+            )
+        }
+    }
+
     override suspend fun saveToDatabase(data: Response<BookData>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
             val entities = data.toEntity()
-            if (entities != null) {
-                bookDao.insert(entities)
+            val medias = data.data?.items?.flatMap { it.medias ?: emptyList() }?.toEntity()
+            entities?.let {
+                bookDao.clear()
+                bookDao.insert(it)
+            }
+            medias?.let {
+                mediaDao.clear()
+                mediaDao.insert(it)
             }
         }
     }
 }
+

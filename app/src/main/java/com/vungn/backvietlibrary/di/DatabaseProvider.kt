@@ -47,4 +47,8 @@ object DatabaseProvider {
     @Provides
     @Singleton
     fun provideCartDao(database: AppDatabase) = database.cartDao()
+
+    @Provides
+    @Singleton
+    fun provideMediaDao(database: AppDatabase) = database.mediaDao()
 }

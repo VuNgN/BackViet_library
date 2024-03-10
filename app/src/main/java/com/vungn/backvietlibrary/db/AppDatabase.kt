@@ -7,12 +7,14 @@ import com.vungn.backvietlibrary.db.dao.BorrowDao
 import com.vungn.backvietlibrary.db.dao.BorrowDetailDao
 import com.vungn.backvietlibrary.db.dao.CartDao
 import com.vungn.backvietlibrary.db.dao.CategoryDao
+import com.vungn.backvietlibrary.db.dao.MediaDao
 import com.vungn.backvietlibrary.db.dao.UserDao
 import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.db.entity.BorrowDetailEntity
 import com.vungn.backvietlibrary.db.entity.BorrowEntity
 import com.vungn.backvietlibrary.db.entity.CartEntity
 import com.vungn.backvietlibrary.db.entity.CategoryEntity
+import com.vungn.backvietlibrary.db.entity.MediaEntity
 import com.vungn.backvietlibrary.db.entity.UserEntity
 
 @Database(
@@ -23,6 +25,7 @@ import com.vungn.backvietlibrary.db.entity.UserEntity
         BorrowEntity::class,
         BorrowDetailEntity::class,
         CartEntity::class,
+        MediaEntity::class
     ],
     version = 1
 )
@@ -38,4 +41,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun borrowDetailDao(): BorrowDetailDao
 
     abstract fun cartDao(): CartDao
+
+    abstract fun mediaDao(): MediaDao
 }
