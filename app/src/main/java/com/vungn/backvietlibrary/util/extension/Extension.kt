@@ -16,6 +16,9 @@ import android.widget.EditText
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import com.vungn.backvietlibrary.BuildConfig
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 fun View.startAlphaAnimation(duration: Long, visibility: Int) {
     val alphaAnimation =
@@ -49,8 +52,7 @@ fun Activity.hideSoftKeyboard() {
     ) as InputMethodManager
     if (inputMethodManager.isAcceptingText()) {
         inputMethodManager.hideSoftInputFromWindow(
-            this.currentFocus!!.windowToken,
-            0
+            this.currentFocus!!.windowToken, 0
         )
     }
 }
@@ -98,4 +100,19 @@ fun Context.themeColor(
 
 fun String.toAvatarUrl(): String {
     return "${BuildConfig.BASE_URL}$this"
+}
+
+fun String.toDate(format: String): Date? {
+    val simpleDateFormat = SimpleDateFormat(format, Locale.getDefault())
+    return simpleDateFormat.parse(this)
+}
+
+fun Date.toFormattedString(format: String): String {
+    val simpleDateFormat = SimpleDateFormat(format, Locale.getDefault())
+    return simpleDateFormat.format(this)
+}
+
+fun Long.toDateString(format: String): String {
+    val simpleDateFormat = SimpleDateFormat(format, Locale.getDefault())
+    return simpleDateFormat.format(this)
 }

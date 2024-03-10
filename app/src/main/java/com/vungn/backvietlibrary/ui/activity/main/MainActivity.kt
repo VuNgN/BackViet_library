@@ -24,6 +24,7 @@ import com.google.android.material.tabs.TabLayout
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.ActivityMainBinding
 import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
+import com.vungn.backvietlibrary.ui.activity.cart.CartActivity
 import com.vungn.backvietlibrary.ui.activity.main.contract.MainActivityViewModel
 import com.vungn.backvietlibrary.ui.activity.main.contract.impl.MainActivityViewModelImpl
 import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity() {
 
                     R.id.item_search -> {
                         val intent = Intent(this@MainActivity, SearchActivity::class.java)
+                        startActivity(intent)
+                    }
+
+                    R.id.item_cart -> {
+                        val intent = Intent(this@MainActivity, CartActivity::class.java)
                         startActivity(intent)
                     }
 
@@ -118,7 +124,8 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.avatar.collect { url ->
                 if (url == null) {
-                    binding.toolbar.menu.getItem(1).setIcon(R.drawable.round_account_circle_24)
+                    binding.toolbar.menu.findItem(R.id.account)
+                        .setIcon(R.drawable.round_account_circle_24)
                     return@collect
                 }
                 Glide.with(this@MainActivity).asDrawable().load(url.toAvatarUrl()).circleCrop()
@@ -128,11 +135,11 @@ class MainActivity : AppCompatActivity() {
                             resource: Drawable,
                             transition: Transition<in Drawable>?
                         ) {
-                            binding.toolbar.menu.getItem(1).setIcon(resource)
+                            binding.toolbar.menu.findItem(R.id.account).setIcon(resource)
                         }
 
                         override fun onLoadCleared(placeholder: Drawable?) {
-                            binding.toolbar.menu.getItem(1).setIcon(placeholder)
+                            binding.toolbar.menu.findItem(R.id.account).setIcon(placeholder)
                         }
                     })
             }

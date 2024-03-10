@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.vungn.backvietlibrary.BuildConfig
 import com.vungn.backvietlibrary.model.service.BookService
+import com.vungn.backvietlibrary.model.service.BorrowService
 import com.vungn.backvietlibrary.model.service.UserService
 import com.vungn.backvietlibrary.network.NetworkEventInterceptor
 import com.vungn.backvietlibrary.network.SuspendInterceptor
@@ -38,7 +39,7 @@ object ServiceProvider {
         networkEventInterceptor: NetworkEventInterceptor
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
         return OkHttpClient.Builder().addInterceptor(SuspendInterceptor(dataStore))
             .authenticator(tokenAuthenticator).addInterceptor(networkEventInterceptor)
             .addInterceptor(loggingInterceptor).build()
@@ -54,5 +55,11 @@ object ServiceProvider {
     @Singleton
     fun bookServiceProvider(retrofit: Retrofit): BookService {
         return retrofit.create(BookService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun borrowServiceProvider(retrofit: Retrofit): BorrowService {
+        return retrofit.create(BorrowService::class.java)
     }
 }

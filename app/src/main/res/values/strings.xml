@@ -19,4 +19,7 @@
     <string name="facebook_client_token">ae95bdc950d1dc7f7918c536abf48cdb</string>
     <string name="logout">Đăng xuất</string>
     <string name="categories">Chủ đề</string>
+    <string name="cart">cart</string>
+    <string name="my_book">Sách của tôi</string>
+    <string name="go_home">Về trang chủ</string>
 </resources>

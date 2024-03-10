@@ -1,6 +1,7 @@
 package com.vungn.backvietlibrary.ui.bookoverview
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
@@ -15,17 +16,16 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.appbar.AppBarLayout
-import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentBookOverviewBinding
 import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity.Companion.KEY_BUNDLE_BOOK
+import com.vungn.backvietlibrary.ui.activity.cart.CartActivity
 import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.extension.startAlphaAnimation
 import com.vungn.backvietlibrary.util.extension.startBackgroundAnimation
@@ -37,9 +37,6 @@ class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     private var bookEntity: BookEntity? = null
     private var mIsTheMenuSmallVisible = false
     private var mIsTheMenuLargeVisible = true
-
-    @ColorInt
-    private var dominantColor: Int = Color.TRANSPARENT
 
     @ColorInt
     private var vibrantColor: Int = Color.TRANSPARENT
@@ -65,8 +62,16 @@ class BookOverviewFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
 
     private fun setupListener() {
         binding.apply {
-            readBookButton.setOnClickListener {
-                findNavController().navigate(R.id.action_bookOverviewFragment_to_bookDetailFragment)
+            addBookButton.setOnClickListener {
+                val intent = Intent(requireContext(), CartActivity::class.java)
+                val bundle = Bundle()
+                bundle.putParcelable(
+                    CartActivity.START_DESTINATION_BUNDLE_KEY,
+                    CartActivity.StartDestination.ADD_TO_CART
+                )
+                bundle.putParcelable(CartActivity.BOOK_BUNDLE_KEY, bookEntity)
+                intent.putExtras(bundle)
+                startActivity(intent)
             }
             toolbar.apply {
                 setNavigationOnClickListener {

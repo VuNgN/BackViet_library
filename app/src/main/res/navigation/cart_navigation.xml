@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cart_navigation"
+    app:startDestination="@id/borrowFragment">
+
+    <fragment
+        android:id="@+id/borrowFragment"
+        android:name="com.vungn.backvietlibrary.ui.borrow.BorrowFragment"
+        android:label="fragment_borrow"
+        tools:layout="@layout/fragment_borrow">
+        <action
+            android:id="@+id/action_borrowFragment_to_addToCartFragment"
+            app:destination="@id/addToCartFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.vungn.backvietlibrary.db.entity.BookEntity" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/addToCartFragment"
+        android:name="com.vungn.backvietlibrary.ui.addtocart.AddToCartFragment"
+        android:label="fragment_add_to_cart"
+        tools:layout="@layout/fragment_add_to_cart">
+        <argument
+            android:name="book"
+            app:argType="com.vungn.backvietlibrary.db.entity.BookEntity" />
+    </fragment>
+</navigation>

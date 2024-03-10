@@ -86,6 +86,9 @@
                     style="?textAppearanceTitleMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
                     android:textColor="?colorOnSurface" />
 
                 <LinearLayout
@@ -105,11 +108,12 @@
                         app:iconTint="?colorOnSurface" />
 
                     <Button
-                        android:id="@+id/read_book_button"
+                        android:id="@+id/add_book_button"
+                        style="@style/Widget.Material3.Button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Read" />
+                        android:text="Thêm vào giỏ sách" />
 
                 </LinearLayout>
 
@@ -140,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="About"
+                android:text="Thông tin sách"
                 android:textColor="?colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

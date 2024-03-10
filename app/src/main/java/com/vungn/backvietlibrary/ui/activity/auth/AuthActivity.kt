@@ -42,4 +42,8 @@ class AuthActivity : AppCompatActivity() {
             }
         }
     }
+
+    companion object {
+        const val RESULT_BUNDLE_KEY = "result_bundle_key"
+    }
 }

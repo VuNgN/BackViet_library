@@ -10,6 +10,13 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/item_cart"
+        android:contentDescription="@string/cart"
+        android:icon="@drawable/round_shopping_cart_24"
+        android:title="@string/cart"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/account"
         android:contentDescription="@string/content_description_account"
         android:icon="@drawable/round_account_circle_24"

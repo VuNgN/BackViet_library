@@ -35,4 +35,16 @@ object DatabaseProvider {
     @Provides
     @Singleton
     fun provideUserDao(database: AppDatabase) = database.userDao()
+
+    @Provides
+    @Singleton
+    fun provideBorrowDao(database: AppDatabase) = database.borrowDao()
+
+    @Provides
+    @Singleton
+    fun provideBorrowDetailDao(database: AppDatabase) = database.borrowDetailDao()
+
+    @Provides
+    @Singleton
+    fun provideCartDao(database: AppDatabase) = database.cartDao()
 }

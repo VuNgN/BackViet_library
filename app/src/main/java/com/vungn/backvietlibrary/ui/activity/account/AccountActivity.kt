@@ -18,6 +18,7 @@ import com.vungn.backvietlibrary.network.NetworkState
 import com.vungn.backvietlibrary.ui.activity.account.contract.AccountActivityViewModel
 import com.vungn.backvietlibrary.ui.activity.account.contract.impl.AccountActivityViewModelImpl
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
+import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity.Companion.RESULT_BUNDLE_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -58,9 +59,5 @@ class AccountActivity : AppCompatActivity() {
                 finish()
             }
         }
-    }
-
-    companion object {
-        const val RESULT_BUNDLE_KEY = "RESULT_BUNDLE_KEY"
     }
 }

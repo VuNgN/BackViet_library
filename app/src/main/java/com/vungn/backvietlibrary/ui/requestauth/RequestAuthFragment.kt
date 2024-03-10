@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentRequestAuthBinding
-import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
+import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity.Companion.RESULT_BUNDLE_KEY
 
 class RequestAuthFragment : Fragment() {
     private lateinit var binding: FragmentRequestAuthBinding
@@ -35,7 +35,7 @@ class RequestAuthFragment : Fragment() {
                 setNavigationOnClickListener {
                     val intent = Intent()
                     val bundle = Bundle()
-                    bundle.putBoolean(AccountActivity.RESULT_BUNDLE_KEY, false)
+                    bundle.putBoolean(RESULT_BUNDLE_KEY, false)
                     intent.putExtras(bundle)
                     (requireActivity() as AuthActivity).setResult(RESULT_OK, intent)
                     requireActivity().finish()

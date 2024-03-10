@@ -5,12 +5,12 @@ import com.google.gson.Gson
 
 class TypeConverter {
     @TypeConverter
-    fun fromListString(value: List<String>): String {
+    fun fromListString(value: List<String>?): String {
         return Gson().toJson(value)
     }
 
     @TypeConverter
-    fun toListString(value: String): List<String> {
+    fun toListString(value: String?): List<String> {
         return Gson().fromJson(value, Array<String>::class.java).toList()
     }
 }

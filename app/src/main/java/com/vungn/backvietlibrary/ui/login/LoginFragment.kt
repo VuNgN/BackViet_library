@@ -18,7 +18,6 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.vungn.backvietlibrary.databinding.FragmentLoginBinding
-import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.auth.AuthActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.login.contract.impl.LoginViewModelImpl
@@ -104,7 +103,7 @@ class LoginFragment : FragmentBase<FragmentLoginBinding, LoginViewModelImpl>() {
                             dialogHelper.dismissDialog()
                             val intent = Intent()
                             val bundle = Bundle()
-                            bundle.putBoolean(AccountActivity.RESULT_BUNDLE_KEY, true)
+                            bundle.putBoolean(AuthActivity.RESULT_BUNDLE_KEY, true)
                             intent.putExtras(bundle)
                             (requireActivity() as AuthActivity).setResult(RESULT_OK, intent)
                             (requireActivity() as AuthActivity).onBackPressedMethod()
