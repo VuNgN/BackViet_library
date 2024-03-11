@@ -12,6 +12,7 @@ import com.vungn.backvietlibrary.model.data.BorrowDetail
 import com.vungn.backvietlibrary.model.data.BorrowItem
 import com.vungn.backvietlibrary.model.data.Response
 import com.vungn.backvietlibrary.model.service.BorrowService
+import com.vungn.backvietlibrary.util.enums.BorrowType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -109,18 +110,15 @@ class GetCartRepo @Inject constructor(
         val borrowDetails = borrowItem?.borrowDetails
         coroutineScopeIO.launch(Dispatchers.IO) {
             borrowItem?.toEntity()?.let {
-                borrowDao.clear()
                 borrowDao.insert(it)
             }
             borrowDetails?.toEntity()?.let {
-                borrowDetailDao.clear()
                 borrowDetailDao.insertAll(it)
             }
-            data.toEntity()?.let { cartDao.insertCart(it) }
+            data.toEntity()?.let {
+                cartDao.clear()
+                cartDao.insertCart(it)
+            }
         }
-    }
-
-    enum class BorrowType(val type: Int) {
-        BORROW(0), EXTEND(1), PENALTY(2), RE_BORROW(3), SHIP(4), BORROW_ON_BEHALF(5),
     }
 }

@@ -27,6 +27,7 @@ import com.vungn.backvietlibrary.ui.activity.account.AccountActivity
 import com.vungn.backvietlibrary.ui.activity.cart.CartActivity
 import com.vungn.backvietlibrary.ui.activity.main.contract.MainActivityViewModel
 import com.vungn.backvietlibrary.ui.activity.main.contract.impl.MainActivityViewModelImpl
+import com.vungn.backvietlibrary.ui.activity.mybook.MyBookActivity
 import com.vungn.backvietlibrary.ui.activity.search.SearchActivity
 import com.vungn.backvietlibrary.util.extension.toAvatarUrl
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,21 +62,53 @@ class MainActivity : AppCompatActivity() {
                     R.id.account -> {
                         val intent = Intent(this@MainActivity, AccountActivity::class.java)
                         startActivity(intent)
+                        true
                     }
 
                     R.id.item_search -> {
                         val intent = Intent(this@MainActivity, SearchActivity::class.java)
                         startActivity(intent)
+                        true
                     }
 
                     R.id.item_cart -> {
                         val intent = Intent(this@MainActivity, CartActivity::class.java)
                         startActivity(intent)
+                        true
                     }
 
-                    else -> {}
+                    else -> {
+                        false
+                    }
                 }
-                true
+            }
+            bottomNavigation.setOnItemSelectedListener {
+                when (it.itemId) {
+                    R.id.homeFragment -> {
+                        navController.navigate(R.id.homeFragment)
+                        true
+                    }
+
+                    R.id.newAndHotFragment -> {
+                        navController.navigate(R.id.newAndHotFragment)
+                        true
+                    }
+
+                    R.id.categoriesFragment -> {
+                        navController.navigate(R.id.categoriesFragment)
+                        true
+                    }
+
+                    R.id.libraryFragment -> {
+                        val intent = Intent(this@MainActivity, MyBookActivity::class.java)
+                        startActivity(intent)
+                        false
+                    }
+
+                    else -> {
+                        false
+                    }
+                }
             }
         }
     }

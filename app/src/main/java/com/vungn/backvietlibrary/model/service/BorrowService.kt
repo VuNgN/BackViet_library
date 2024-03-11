@@ -20,6 +20,9 @@ interface BorrowService {
     @GET("/api/Borrow/cart/{borrowType}")
     fun getCart(@Path("borrowType") borrowType: Int): Call<Response<BorrowItem>>
 
+    @GET("/api/Borrow/{borrowType}/expired")
+    fun getExpiredBorrows(@Path("borrowType") borrowType: Int): Call<Response<BorrowData>>
+
     @PUT("/api/Borrow/{id}/checkout")
     fun checkout(@Path("id") borrowId: String): Call<Response<BorrowItem>>
 

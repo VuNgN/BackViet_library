@@ -12,11 +12,14 @@ interface BookDao {
     @Query("SELECT * FROM book")
     fun getAllBooks(): Flow<List<BookEntity>>
 
-    @Query("SELECT * FROM book WHERE coverImage IS NOT NULL ORDER BY publishYear DESC LIMIT 10")
+    @Query("SELECT * FROM book ORDER BY publishYear DESC LIMIT 10")
     fun get10EarliestPublishedBook(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM book where id = :id")
     fun getBookById(id: String): Flow<BookEntity>
+
+    @Query("SELECT * FROM book where id IN (:ids)")
+    fun getBooksByIds(ids: List<String>): Flow<List<BookEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg books: BookEntity)

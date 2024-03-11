@@ -31,8 +31,7 @@ class NewAndHotFragment : FragmentBase<FragmentNewAndHotBinding, NewAndHotViewMo
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.books.collect {
-                    adapter.data = it
-                    adapter.notifyItemRangeChanged(0, it.size)
+                    adapter.submitList(it)
                 }
             }
         }

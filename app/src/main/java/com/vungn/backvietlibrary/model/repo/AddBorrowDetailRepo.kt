@@ -10,6 +10,7 @@ import com.vungn.backvietlibrary.model.data.BorrowItem
 import com.vungn.backvietlibrary.model.data.Request
 import com.vungn.backvietlibrary.model.data.Response
 import com.vungn.backvietlibrary.model.service.BorrowService
+import com.vungn.backvietlibrary.util.enums.BorrowType
 import com.vungn.backvietlibrary.util.extension.toFormattedString
 import com.vungn.backvietlibrary.util.`object`.DateFormats
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +38,7 @@ class AddBorrowDetailRepo @Inject constructor(
     ) {
         val borrowedDateRequest = Date(borrowDate).toFormattedString(DateFormats.ISO_8601)
         val returnDateRequest = Date(returnDate).toFormattedString(DateFormats.ISO_8601)
-        getCartRepo.execute(GetCartRepo.BorrowType.BORROW, object : Callback<Response<BorrowItem>> {
+        getCartRepo.execute(BorrowType.BORROW, object : Callback<Response<BorrowItem>> {
             override fun onSuccess(data: Response<BorrowItem>) {
                 _request = Request(
                     model = BorrowItem(

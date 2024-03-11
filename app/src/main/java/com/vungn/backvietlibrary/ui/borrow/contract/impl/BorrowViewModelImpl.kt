@@ -10,6 +10,7 @@ import com.vungn.backvietlibrary.model.repo.CheckOutBorrowRepo
 import com.vungn.backvietlibrary.model.repo.DeleteBorrowDetailRepo
 import com.vungn.backvietlibrary.model.repo.GetCartRepo
 import com.vungn.backvietlibrary.ui.borrow.contract.BorrowViewModel
+import com.vungn.backvietlibrary.util.enums.BorrowType
 import com.vungn.backvietlibrary.util.enums.CallApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ class BorrowViewModelImpl @Inject constructor(
     override fun getCart() {
         _callApiState.value = CallApiState.LOADING
         viewModelScope.launch(Dispatchers.IO) {
-            getCartRepo.execute(GetCartRepo.BorrowType.BORROW,
+            getCartRepo.execute(BorrowType.BORROW,
                 object : BaseRepo.Callback<Response<BorrowItem>> {
                     override fun onSuccess(data: Response<BorrowItem>) {
                         _callApiState.value = CallApiState.SUCCESS
@@ -63,7 +64,8 @@ class BorrowViewModelImpl @Inject constructor(
     override fun deleteBorrowDetail(borrowId: String, borrowDetailId: String) {
         _callApiState.value = CallApiState.LOADING
         viewModelScope.launch(Dispatchers.IO) {
-            deleteBorrowDetailRepo.execute(borrowId,
+            deleteBorrowDetailRepo.execute(
+                borrowId,
                 borrowDetailId,
                 object : BaseRepo.Callback<Response<BorrowItem>> {
                     override fun onSuccess(data: Response<BorrowItem>) {

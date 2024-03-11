@@ -11,7 +11,7 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/libraryFragment"
+        android:id="@+id/categoriesFragment"
         android:name="com.vungn.backvietlibrary.ui.library.LibraryFragment"
         android:label="fragment_library"
         tools:layout="@layout/fragment_library" />
@@ -21,7 +21,7 @@
         android:label="fragment_new_and_hot"
         tools:layout="@layout/fragment_new_and_hot" />
     <fragment
-        android:id="@+id/offerFragment"
+        android:id="@+id/libraryFragment"
         android:name="com.vungn.backvietlibrary.ui.offer.OfferFragment"
         android:label="fragment_offer"
         tools:layout="@layout/fragment_offer" />

@@ -39,7 +39,7 @@ object ServiceProvider {
         networkEventInterceptor: NetworkEventInterceptor
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         return OkHttpClient.Builder().addInterceptor(SuspendInterceptor(dataStore))
             .authenticator(tokenAuthenticator).addInterceptor(networkEventInterceptor)
             .addInterceptor(loggingInterceptor).build()

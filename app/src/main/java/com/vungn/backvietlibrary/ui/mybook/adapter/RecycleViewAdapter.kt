@@ -1,4 +1,4 @@
-package com.vungn.backvietlibrary.ui.newandhot.adapter
+package com.vungn.backvietlibrary.ui.mybook.adapter
 
 import android.content.Context
 import android.graphics.Point

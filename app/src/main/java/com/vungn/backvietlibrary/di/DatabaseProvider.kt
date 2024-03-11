@@ -51,4 +51,8 @@ object DatabaseProvider {
     @Provides
     @Singleton
     fun provideMediaDao(database: AppDatabase) = database.mediaDao()
+
+    @Provides
+    @Singleton
+    fun provideActivatedBookDao(database: AppDatabase) = database.activatedBookDao()
 }

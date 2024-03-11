@@ -24,17 +24,22 @@
         android:theme="@style/Theme.BackVietLibrary"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activity.mybook.MyBookActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.cart.CartActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.account.AccountActivity"
             android:exported="false" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="@string/facebook_client_token" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
@@ -84,6 +89,7 @@
                 android:name="photopicker_activity:0:required"
                 android:value="" />
         </service>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
