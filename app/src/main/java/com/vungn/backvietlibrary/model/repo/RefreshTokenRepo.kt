@@ -45,10 +45,17 @@ class RefreshTokenRepo @Inject constructor(
             val call = client.newCall(request)
             val response = call.execute()
             if (response.isSuccessful) {
-                val authResponse = gson.fromJson(response.body?.string(), AuthResponse::class.java)
-                dataStore.edit {
-                    it[PreferenceKey.ACCESS_TOKEN] = authResponse.data.accessToken
-                    it[PreferenceKey.REFRESH_TOKEN] = authResponse.data.refreshToken
+                val responseBody = response.body?.string()
+                if (responseBody != null && responseBody.trim().startsWith("{")) {
+                    val authResponse =
+                        gson.fromJson(responseBody, AuthResponse::class.java)
+                    dataStore.edit {
+                        it[PreferenceKey.ACCESS_TOKEN] = authResponse.data.accessToken
+                        it[PreferenceKey.REFRESH_TOKEN] = authResponse.data.refreshToken
+                    }
+                } else {
+                    networkEvent.publish(NetworkState.UNAUTHORIZED)
+                    return@runBlocking false
                 }
             }
             return@runBlocking response.isSuccessful
