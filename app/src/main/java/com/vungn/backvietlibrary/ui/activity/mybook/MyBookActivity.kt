@@ -1,6 +1,8 @@
 package com.vungn.backvietlibrary.ui.activity.mybook
 
 import android.content.Intent
+import android.os.Build
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +25,15 @@ class MyBookActivity : BaseActivity<ActivityMyBookBinding, MyBookActivityViewMod
     private val startLoginActivity = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(), activityResultCallback()
     )
+    private val requestPermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { isGranted ->
+        if (!isGranted.values.all { it }) {
+            Toast.makeText(this, "Chức năng cần được cấp quyền để sử dụng.", Toast.LENGTH_SHORT)
+                .show()
+            finish()
+        }
+    }
 
     override fun getViewBinding(): ActivityMyBookBinding =
         ActivityMyBookBinding.inflate(layoutInflater)
@@ -65,6 +76,18 @@ class MyBookActivity : BaseActivity<ActivityMyBookBinding, MyBookActivityViewMod
             if (isLoginSuccess != true) {
                 finish()
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            requestPermission.launch(
+                arrayOf(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            )
         }
     }
 }

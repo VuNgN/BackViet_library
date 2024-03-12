@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.graphics.values
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.ItemPageViewPagerBinding
@@ -18,17 +20,11 @@ import com.vungn.backvietlibrary.util.listener.OnSinglePress
 import kotlin.math.round
 
 class ViewPagerAdapter(private val context: Context) :
-    RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
-    private var _data: MutableList<Page> = mutableListOf()
+    ListAdapter<Page, ViewPagerAdapter.PagerViewHolder>(DiffCallback()) {
     private var _onItemClick: OnItemClick<Page>? = null
     private var _onImageZoom: OnImageZoom? = null
     private var _isZooming: Boolean = false
 
-    var data: MutableList<Page>
-        get() = _data
-        set(value) {
-            _data = value.toMutableList()
-        }
     var onItemClick: OnItemClick<Page>?
         get() = _onItemClick
         set(value) {
@@ -69,10 +65,20 @@ class ViewPagerAdapter(private val context: Context) :
         }
 
         fun setupPageInfo(index: Int) {
-            val percent = round((index.toFloat() / _data.size.toFloat()) * 100).toInt()
+            val percent = round((index.toFloat() / itemCount.toFloat()) * 100).toInt()
             binding.page.text =
-                context.getString(R.string.page_info, index.toString(), _data.size.toString())
+                context.getString(R.string.page_info, index.toString(), itemCount.toString())
             binding.percent.text = context.getString(R.string.page_percent, percent.toString())
+        }
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<Page>() {
+        override fun areItemsTheSame(oldItem: Page, newItem: Page): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Page, newItem: Page): Boolean {
+            return oldItem == newItem
         }
     }
 
@@ -82,10 +88,9 @@ class ViewPagerAdapter(private val context: Context) :
         return PagerViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = _data.size
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-        _data[position].apply {
+        getItem(position).apply {
             holder.setupImage(content)
             holder.setupPageInfo(page)
             holder.setupListener(this)

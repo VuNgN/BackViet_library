@@ -90,7 +90,8 @@ class MyBookFragment : FragmentBase<FragmentMyBookBinding, MyBookViewModelImpl>(
 
     private val onItemClick = object : OnItemClick<BookEntity> {
         override fun onItemClick(value: BookEntity) {
-
+            val action = MyBookFragmentDirections.actionMyBookFragmentToBookDetailFragment(value)
+            navController.navigate(action)
         }
     }
 

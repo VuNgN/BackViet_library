@@ -19,7 +19,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object ServiceProvider {
@@ -39,7 +38,7 @@ object ServiceProvider {
         networkEventInterceptor: NetworkEventInterceptor
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
         return OkHttpClient.Builder().addInterceptor(SuspendInterceptor(dataStore))
             .authenticator(tokenAuthenticator).addInterceptor(networkEventInterceptor)
             .addInterceptor(loggingInterceptor).build()

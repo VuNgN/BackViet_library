@@ -6,21 +6,29 @@
     app:startDestination="@id/myBookFragment">
 
     <fragment
-        android:id="@+id/bookDetailFragment2"
+        android:id="@+id/bookDetailFragment"
         android:name="com.vungn.backvietlibrary.ui.bookdetail.BookDetailFragment"
         android:label="fragment_book_detail"
-        tools:layout="@layout/fragment_book_detail" />
+        tools:layout="@layout/fragment_book_detail">
+        <argument
+            android:name="book"
+            app:argType="com.vungn.backvietlibrary.db.entity.BookEntity" />
+    </fragment>
     <fragment
         android:id="@+id/myBookFragment"
         android:name="com.vungn.backvietlibrary.ui.mybook.MyBookFragment"
         android:label="fragment_my_book"
         tools:layout="@layout/fragment_my_book">
         <action
-            android:id="@+id/action_myBookFragment_to_bookDetailFragment2"
-            app:destination="@id/bookDetailFragment2"
+            android:id="@+id/action_myBookFragment_to_bookDetailFragment"
+            app:destination="@id/bookDetailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="book"
+                app:argType="com.vungn.backvietlibrary.db.entity.BookEntity" />
+        </action>
     </fragment>
 </navigation>

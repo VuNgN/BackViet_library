@@ -26,6 +26,7 @@ okhttp-logging-interceptor = "4.12.0"
 room_version = "2.6.1"
 worker = "2.9.0"
 hilt_worker = "1.2.0"
+itextpdf = "5.5.13.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -60,7 +61,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room_ver
 worker = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "worker" }
 hilt-worker = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt_worker" }
 hilt-worker-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hilt_worker" }
-nav-safe-args = { group = "androidx.navigation", name = "navigation-safe-args-gradle-plugin", version.ref = "nav_version" }
+itextpdf = { group = "com.itextpdf", name = "itextpdf", version.ref = "itextpdf" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

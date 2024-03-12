@@ -10,23 +10,31 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout.LayoutParams
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.setPadding
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.slider.Slider
 import com.vungn.backvietlibrary.R
 import com.vungn.backvietlibrary.databinding.FragmentBookDetailBinding
+import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.bookdetail.adapter.ViewPagerAdapter
 import com.vungn.backvietlibrary.ui.bookdetail.contract.impl.BookDetailViewModelImpl
+import com.vungn.backvietlibrary.ui.component.BookDetailLoadingDialogFragment
 import com.vungn.backvietlibrary.util.data.Page
+import com.vungn.backvietlibrary.util.enums.CallApiState
+import com.vungn.backvietlibrary.util.enums.LoadFileState
 import com.vungn.backvietlibrary.util.extension.getColorAttr
 import com.vungn.backvietlibrary.util.listener.OnImageZoom
 import com.vungn.backvietlibrary.util.listener.OnItemClick
@@ -38,47 +46,30 @@ import kotlin.math.round
 
 
 class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailViewModelImpl>() {
+    private val args: BookDetailFragmentArgs by navArgs()
+    private lateinit var book: BookEntity
+    private lateinit var dialog: BookDetailLoadingDialogFragment
+
     private lateinit var adapter: ViewPagerAdapter
     private var isSliding: Boolean = false
     private val screenSize: Point = Point()
     private var mVisible = true
     private val mHideHandler = Handler()
     private lateinit var mContentView: View
-    private lateinit var mControlsView: View
-
-    private val AUTO_HIDE = true
-    private val AUTO_HIDE_DELAY_MILLIS = 3000
     private val UI_ANIMATION_DELAY = 300
     private val mHidePart2Runnable = Runnable { // Delayed removal of status and navigation bar
 
         // Note that some of these constants are new as of API 16 (Jelly Bean)
         // and API 19 (KitKat). It is safe to use them, as they are inlined
         // at compile-time and do nothing on earlier devices.
-        mContentView.setSystemUiVisibility(
+        mContentView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        )
     }
 
     private val mShowPart2Runnable = Runnable { // Delayed display of UI elements
         requireActivity().actionBar?.show()
         updateUI(false)
     }
-
-    private val mHideRunnable = Runnable { hide() }
-
-    private val mDelayHideTouchListener = View.OnTouchListener { view, motionEvent ->
-        view.performClick()
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
-
-    private fun delayedHide(delayMillis: Int) {
-        mHideHandler.removeCallbacks(mHideRunnable)
-        mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
-    }
-
 
     private fun toggle() {
         if (mVisible) {
@@ -148,6 +139,7 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
 
     override fun onStart() {
         super.onStart()
+        book = args.book
         try {
             lifecycleScope.launch {
                 viewModel.updateState.collect {
@@ -155,8 +147,13 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
                 }
             }
             if (viewModel.updateState.value != PageUpdateState.DONE) {
-                viewModel.openRenderer(requireContext(), "HKICO.pdf")
-                viewModel.loadBook()
+                try {
+                    viewModel.openRenderer(
+                        requireContext(), book.id, book.pageNumber?.toInt()?.minus(1) ?: 0
+                    )
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -168,6 +165,9 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
         val windowManager: WindowManager =
             requireContext().getSystemService(Context.WINDOW_SERVICE) as WindowManager
         windowManager.defaultDisplay.getRealSize(screenSize)
+        requireActivity().supportFragmentManager.executePendingTransactions()
+        dialog = BookDetailLoadingDialogFragment()
+        dialog.isCancelable = false
     }
 
     override fun onStop() {
@@ -189,7 +189,7 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
         }
         binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                val currentPage = adapter.data[position]
+                val currentPage = adapter.currentList[position]
                 viewModel.updatePage(currentPage)
                 if (!isSliding) {
                     binding.slider.value =
@@ -267,22 +267,89 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
 
         setupPagerFullScreen()
         setupPager()
+        setupDialog()
         lifecycleScope.launch {
-            viewModel.pages.collect {
-                Log.d("", "setupViews: ${it.size}")
-                adapter.data = it
-                adapter.notifyItemInserted(adapter.data.size)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pages.collect {
+                    Log.d("", "setupViews: ${it.size}")
+                    adapter.submitList(it)
+                }
             }
         }
         lifecycleScope.launch {
-            viewModel.pagesCount.collect {
-                val current = 1
-                binding.pageNumber.text = getString(
-                    R.string.page_number, current.toString(), it.toString()
-                )
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.pagesCount.collect {
+                    val current = 1
+                    binding.pageNumber.text = getString(
+                        R.string.page_number, current.toString(), it.toString()
+                    )
+                }
             }
         }
         updateUI(false)
+    }
+
+    private fun setupDialog() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.callApiState.collect {
+                    when (it) {
+                        CallApiState.LOADING -> {
+                            if (!dialog.isAdded) {
+                                dialog.show(requireActivity().supportFragmentManager, TAG)
+                            }
+                        }
+
+                        CallApiState.SUCCESS -> {
+                            if (dialog.isAdded) {
+                                dialog.dismiss()
+                            }
+                        }
+
+                        CallApiState.ERROR -> {
+                            Toast.makeText(
+                                requireContext(),
+                                "Có lỗi xảy ra trong khi lấy dữ liệu. Vui lòng thử lại.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            navController.popBackStack()
+                        }
+
+                        CallApiState.NONE -> {}
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.loadBookState.collect {
+                    when (it) {
+                        LoadFileState.LOADING -> {
+                            if (!dialog.isAdded) {
+                                dialog.show(requireActivity().supportFragmentManager, TAG)
+                            }
+                        }
+
+                        LoadFileState.SUCCESS -> {
+                            if (dialog.isAdded) {
+                                dialog.dismiss()
+                            }
+                        }
+
+                        LoadFileState.ERROR -> {
+                            Toast.makeText(
+                                requireContext(),
+                                "Có lỗi xảy ra trong khi đọc dữ liệu. Vui lòng thử lại.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            navController.popBackStack()
+                        }
+
+                        LoadFileState.NONE -> {}
+                    }
+                }
+            }
+        }
     }
 
     private fun setupPager() {
@@ -330,9 +397,6 @@ class BookDetailFragment : FragmentBase<FragmentBookDetailBinding, BookDetailVie
     }
 
     companion object {
-        private const val PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.4f
-        private const val PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.5f
-        private const val ALPHA_ANIMATIONS_DURATION = 200L
+        const val TAG = "BookDetailFragment"
     }
-
 }
