@@ -110,7 +110,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/menu_bottom_app_bar_login" />
+        app:menu="@menu/menu_bottom_app_bar_login"
+        app:paddingBottomSystemWindowInsets="false" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/login_button"
