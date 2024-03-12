@@ -19,8 +19,14 @@ interface BorrowDetailDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(borrowDetails: List<BorrowDetailEntity>)
 
+    @Query("DELETE FROM borrowdetail where id = :id")
+    fun deleteById(id: String)
+
     @Delete
-    fun delete(borrowDetail: BorrowDetailEntity)
+    fun delete(vararg borrowDetail: BorrowDetailEntity)
+
+    @Delete
+    fun deleteAll(borrowDetails: List<BorrowDetailEntity>)
 
     @Query("DELETE FROM borrowdetail")
     fun clear()

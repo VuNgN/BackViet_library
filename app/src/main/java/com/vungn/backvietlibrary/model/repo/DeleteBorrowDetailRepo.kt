@@ -9,9 +9,7 @@ import com.vungn.backvietlibrary.model.service.BorrowService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import javax.inject.Inject
@@ -20,7 +18,7 @@ class DeleteBorrowDetailRepo @Inject constructor(
     @CoroutineScopeIO private val coroutineScopeIO: CoroutineScope,
     private val borrowService: BorrowService,
     private val borrowDetailDao: BorrowDetailDao
-) : BaseRepo<Response<BorrowItem>, BorrowDetailEntity?>() {
+) : BaseRepo<Response<BorrowItem>, List<BorrowDetailEntity>?>() {
     private lateinit var _borrowId: String
     private lateinit var _borrowDetailId: String
     override val call: Call<Response<BorrowItem>>
@@ -34,12 +32,12 @@ class DeleteBorrowDetailRepo @Inject constructor(
         return execute(callback)
     }
 
-    override fun getFromDatabase(): Flow<BorrowDetailEntity> = flow {}
+    override fun getFromDatabase(): Flow<List<BorrowDetailEntity>?> = flow {}
 
-    override fun Response<BorrowItem>.toEntity(): BorrowDetailEntity? {
+    override fun Response<BorrowItem>.toEntity(): List<BorrowDetailEntity>? {
         val borrowItem = this.data
         val borrowDetails = borrowItem?.borrowDetails
-        return borrowDetails?.firstOrNull()?.let { borrowDetail ->
+        return borrowDetails?.map { borrowDetail ->
             BorrowDetailEntity(
                 borrowId = borrowDetail.borrowId,
                 bookType = borrowDetail.bookType,
@@ -62,10 +60,12 @@ class DeleteBorrowDetailRepo @Inject constructor(
 
     override suspend fun saveToDatabase(data: Response<BorrowItem>) {
         coroutineScopeIO.launch(Dispatchers.IO) {
-            borrowDetailDao.getBorrowDetailByBorrowId(_borrowId).stateIn(coroutineScopeIO).first()
-                .let { borrowDetailEntity ->
-                    borrowDetailEntity.let { borrowDetailDao.delete(it) }
-                }
+//            data.toEntity()?.let {
+//                borrowDetailDao.deleteAll(it)
+//            }
+            _borrowDetailId.let {
+                borrowDetailDao.deleteById(it)
+            }
         }
     }
 }
