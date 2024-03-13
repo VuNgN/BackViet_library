@@ -9,12 +9,14 @@ import com.vungn.backvietlibrary.model.data.Response
 import com.vungn.backvietlibrary.model.data.UserValue
 import com.vungn.backvietlibrary.model.repo.BaseRepo
 import com.vungn.backvietlibrary.model.repo.GetUserRepo
+import com.vungn.backvietlibrary.model.repo.LogoutRepo
 import com.vungn.backvietlibrary.ui.account.contract.AccountViewModel
 import com.vungn.backvietlibrary.util.enums.CallApiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,10 +24,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModelImpl @Inject constructor(
-    private val userRepo: GetUserRepo,
-    private val gson: Gson
-) : ViewModel(),
-    AccountViewModel {
+    private val userRepo: GetUserRepo, private val logoutRepo: LogoutRepo, private val gson: Gson
+) : ViewModel(), AccountViewModel {
     private val _user: MutableStateFlow<UserEntity?> = MutableStateFlow(null)
     private val _callApiState: MutableStateFlow<CallApiState> =
         MutableStateFlow(CallApiState.LOADING)
@@ -57,6 +57,23 @@ class AccountViewModelImpl @Inject constructor(
                 _user.emit(it)
             }
         }
+    }
+
+    override fun logout(listener: OnLogoutListener) {
+        viewModelScope.launch {
+            logoutRepo.logout().stateIn(viewModelScope).first().let {
+                if (it) {
+                    listener.onLogoutSuccess()
+                } else {
+                    listener.onLogoutFailed()
+                }
+            }
+        }
+    }
+
+    interface OnLogoutListener {
+        fun onLogoutSuccess()
+        fun onLogoutFailed()
     }
 
     companion object {

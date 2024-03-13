@@ -20,4 +20,7 @@ interface UserDao {
 
     @Update
     fun updateUsers(vararg users: UserEntity)
+
+    @Query("DELETE FROM user")
+    fun deleteAllUsers()
 }

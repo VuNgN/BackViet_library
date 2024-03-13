@@ -57,8 +57,8 @@ android {
 }
 
 dependencies {
-    // I-text pdf
-    implementation(libs.itextpdf)
+    // AutoSlider
+    implementation(libs.autoimageslider)
 
     // Worker
     implementation(libs.worker)

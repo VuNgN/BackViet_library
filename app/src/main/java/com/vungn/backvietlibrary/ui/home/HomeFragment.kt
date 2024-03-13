@@ -5,13 +5,14 @@ import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.UncontainedCarouselStrategy
+import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
+import com.smarteist.autoimageslider.SliderAnimations
 import com.vungn.backvietlibrary.databinding.FragmentHomeBinding
 import com.vungn.backvietlibrary.db.entity.BookEntity
 import com.vungn.backvietlibrary.ui.activity.book.BookActivity
@@ -19,9 +20,10 @@ import com.vungn.backvietlibrary.ui.activity.main.MainActivity
 import com.vungn.backvietlibrary.ui.base.FragmentBase
 import com.vungn.backvietlibrary.ui.home.adapter.BookCategoryAdapter
 import com.vungn.backvietlibrary.ui.home.adapter.CarouselBookCategoryAdapter
+import com.vungn.backvietlibrary.ui.home.adapter.SliderAdapter
 import com.vungn.backvietlibrary.ui.home.adapter.ViewPagerAdapter
 import com.vungn.backvietlibrary.ui.home.contract.impl.HomeViewModelImpl
-import com.vungn.backvietlibrary.util.GridItemDecoration
+import com.vungn.backvietlibrary.util.Common
 import com.vungn.backvietlibrary.util.listener.OnItemClick
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,11 +54,24 @@ class HomeFragment : FragmentBase<FragmentHomeBinding, HomeViewModelImpl>() {
     }
 
     override fun setupViews() {
-        (requireActivity() as MainActivity).setTopBarTitle("Thư viện sách")
+        (requireActivity() as MainActivity).setTopBarTitle("Thư viện tỉnh Vĩnh Phúc")
         defineAdapters()
         setupViewPager()
 //        setupBookCategoryFirstTime()
         setupBookCategoryForYou()
+        setupSlider()
+    }
+
+    private fun setupSlider() {
+        binding.imageSlider.apply {
+            val adapter = SliderAdapter()
+            adapter.data = Common.sliderList
+            scrollTimeInSec = 5
+            setSliderAdapter(adapter)
+            setIndicatorAnimation(IndicatorAnimationType.WORM)
+            setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+            startAutoCycle()
+        }
     }
 
     private fun defineAdapters() {
@@ -80,21 +95,21 @@ class HomeFragment : FragmentBase<FragmentHomeBinding, HomeViewModelImpl>() {
         bookCategory.setLayoutManager(layoutManager)
     }
 
-    private fun setupBookCategoryFirstTime() {
-        val bookCategory = binding.bookCategoryFirstTime
-        val adapter = bookCategoryAdapter
-        val layoutManager = object : GridLayoutManager(requireContext(), 3) {
-            override fun canScrollVertically(): Boolean {
-                return false
-            }
-        }
-        val decoration = GridItemDecoration(50, 3, true)
-        adapter.data = viewModel.books.value
-        adapter.onItemClick = gotoBookEntity
-        bookCategory.setAdapter(adapter)
-        bookCategory.setDecoration(decoration)
-        bookCategory.setLayoutManager(layoutManager)
-    }
+//    private fun setupBookCategoryFirstTime() {
+//        val bookCategory = binding.bookCategoryFirstTime
+//        val adapter = bookCategoryAdapter
+//        val layoutManager = object : GridLayoutManager(requireContext(), 3) {
+//            override fun canScrollVertically(): Boolean {
+//                return false
+//            }
+//        }
+//        val decoration = GridItemDecoration(50, 3, true)
+//        adapter.data = viewModel.books.value
+//        adapter.onItemClick = gotoBookEntity
+//        bookCategory.setAdapter(adapter)
+//        bookCategory.setDecoration(decoration)
+//        bookCategory.setLayoutManager(layoutManager)
+//    }
 
     private fun setupViewPager() {
         val pager = binding.vp2

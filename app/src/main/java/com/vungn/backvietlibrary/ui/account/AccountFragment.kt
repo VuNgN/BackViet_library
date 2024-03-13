@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Lifecycle
@@ -54,6 +55,23 @@ class AccountFragment : FragmentBase<FragmentAccountBinding, AccountViewModelImp
     override fun setupListener() {
         binding.mainToolbar.setNavigationOnClickListener {
             requireActivity().finish()
+        }
+        binding.mainButtonLogout.setOnClickListener {
+            viewModel.logout(object : AccountViewModelImpl.OnLogoutListener {
+                override fun onLogoutSuccess() {
+                    Toast.makeText(requireContext(), "Đăng xuất thành công!", Toast.LENGTH_SHORT)
+                        .show()
+                    requireActivity().finish()
+                }
+
+                override fun onLogoutFailed() {
+                    Toast.makeText(
+                        requireContext(),
+                        "Đã có lỗi xảy ra, vui lòng thử lại sau!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
         }
         binding.mainButtonChangeAvatar.setOnClickListener {
             val fragmentTag = ChangeAvatarBottomSheetFragment.TAG
